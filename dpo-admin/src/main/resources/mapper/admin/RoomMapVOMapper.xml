@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.RoomMapper">
+
+    <resultMap type="cn.dtransfer.admin.vo.RoomMapVO" id="ParkMapVOResult">
+        <result property="parkName" column="park_name"/>
+        <collection property="buildingVOList" ofType="cn.dtransfer.admin.vo.BuildingVO" resultMap="BuildingVOResult"/>
+    </resultMap>
+
+    <!-- 楼宇 -->
+    <resultMap type="cn.dtransfer.admin.vo.BuildingVO" id="BuildingVOResult">
+        <result property="buildingId" column="building_id"/>
+        <result property="buildingName" column="building_name"/>
+        <collection property="buildingDetailVOList" ofType="cn.dtransfer.admin.vo.BuildingDetailVO" resultMap="BuildingDetailVOResult"/>
+    </resultMap>
+
+    <!-- 楼层 -->
+    <resultMap type="cn.dtransfer.admin.vo.BuildingDetailVO" id="BuildingDetailVOResult">
+        <result property="floorNum" column="floor_num"/>
+        <collection property="roomVOList" ofType="cn.dtransfer.admin.vo.RoomVO" resultMap="RoomVOResult"/>
+    </resultMap>
+
+    <!-- 房间 -->
+    <resultMap type="cn.dtransfer.admin.vo.RoomVO" id="RoomVOResult">
+        <result property="roomId" column="room_id"/>
+        <result property="roomName" column="room_name"/>
+        <result property="status" column="status" />
+        <result property="rent" column="rent"/>
+        <result property="rentType" column="rent_type"/>
+        <result property="area" column="area"/>
+        <result property="expireDate" column="expire_date"/>
+    </resultMap>
+
+
+    <sql id="selectParkMapVO">
+        SELECT
+            ip.name          AS park_name,
+            ib.id            AS building_id,
+            ib.building_name AS building_name,
+            ibd.floor_num,
+            ir.id AS room_id,
+            ir.name AS room_name,
+            ir.status,
+            ir.rent,
+            ir.area,
+            ir.rent_type,
+            IF(ir.`status`= 0,DATEDIFF(CURRENT_DATE, ir.`update_status_time`), 0) AS expire_date
+        FROM `dpo_room` AS ir
+                 LEFT JOIN `dpo_building` AS ib ON ib.id = ir.building_id
+                 LEFT JOIN `dpo_building_detail` AS ibd ON ibd.id = ir.building_detail_id
+                 LEFT JOIN   dpo_park AS ip ON ip.id = ir.`park_id`
+    </sql>
+
+
+    <select id="selectParkMapVOList" parameterType="cn.dtransfer.admin.vo.RoomMapVO" resultMap="ParkMapVOResult">
+        <include refid="selectParkMapVO"/>
+        <where>
+        <if test="name != null  and name != ''">AND ir.name LIKE concat('%', #{name}, '%')</if>
+        <if test="buildingName!= null  and buildingName != ''">AND ib.building_name LIKE concat('%', #{buildingName},
+            '%')
+        </if>
+        <if test="status != null">AND ir.status = #{status.value}</if>
+        <if test="isMarketable != null">AND ir.is_marketable = #{isMarketable}</if>
+        <if test="deleteFlag != null"> AND ir.delete_flag = #{deleteFlag} </if>
+        </where>
+        ORDER BY ibd.`floor_num` ASC
+    </select>
+
+
+
+</mapper>

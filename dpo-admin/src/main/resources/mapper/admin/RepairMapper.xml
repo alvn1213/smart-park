@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.RepairMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.Repair" id="RepairResult">
+        <result property="id" column="id"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="area" column="area"/>
+        <result property="status" column="status" />
+        <result property="content" column="content"/>
+        <result property="repairTime" column="repair_time"/>
+        <result property="repairImages" column="repair_images" jdbcType="LONGVARCHAR"
+                javaType="java.util.ArrayList" typeHandler="cn.dtransfer.admin.handler.BannerImageHandler"/>
+        <result property="repairFee" column="repair_fee"/>
+        <result property="repairScore" column="repair_score"/>
+        <result property="repairMateriel" column="repair_materiel"/>
+        <result property="beginDate" column="begin_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="remark" column="remark"/>
+        <result property="workerScore" column="worker_score"/>
+        <result property="workerId" column="worker_id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+        <association property="customer" javaType="cn.dtransfer.admin.domain.Customer" resultMap="CustomerResult"/>
+        <association property="park" javaType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult"/>
+        <association property="user" javaType="cn.dtransfer.system.domain.User" resultMap="UserResult"/>
+    </resultMap>
+
+    <resultMap id="CustomerResult" type="cn.dtransfer.admin.domain.Customer">
+        <result property="id" column="cid"/>
+        <result property="name" column="cname"/>
+    </resultMap>
+
+    <resultMap id="ParkResult" type="cn.dtransfer.admin.domain.Park">
+        <id property="id" column="pid"/>
+        <result property="name" column="pname"/>
+    </resultMap>
+
+    <resultMap id="UserResult" type="cn.dtransfer.system.domain.User">
+        <id property="id" column="userId"/>
+        <id property="username" column="username"/>
+        <result property="mobile" column="mobile"/>
+    </resultMap>
+
+    <sql id="selectRepairVo">
+        SELECT r.id,
+               r.sn,
+               r.name,
+               r.phone,
+               r.area,
+               r.status,
+               r.content,
+               r.repair_time,
+               r.repair_images,
+               r.repair_fee,
+               r.repair_score,
+               r.repair_materiel,
+               r.begin_date,
+               r.end_date,
+               r.remark,
+               r.worker_score,
+               r.worker_id,
+               r.customer_id,
+               r.create_by,
+               r.create_time,
+               r.update_by,
+               r.update_time,
+               r.tenant_id,
+               r.park_id,
+               ic.id   AS cid,
+               ic.name AS cname,
+               ip.id   AS pid,
+               ip.name AS pname,
+               u.id    AS userId,
+               u.username,
+               u.mobile
+        FROM dpo_repair AS r
+                 LEFT JOIN dpo_customer AS ic ON r.customer_id = ic.id
+                 LEFT JOIN sys_user AS u ON r.worker_id = u.id
+                 LEFT JOIN dpo_park AS ip ON ip.id = r.park_id
+    </sql>
+
+    <select id="selectRepairList" parameterType="cn.dtransfer.admin.domain.Repair" resultMap="RepairResult">
+        <include refid="selectRepairVo"/>
+        <where>
+            <if test="sn != null and sn != ''">AND r.sn LIKE CONCAT('%', #{sn}, '%')</if>
+            <if test="status != null"> AND r.status =#{status.ordinal}</if>
+            AND r.delete_flag = 0
+        </where>
+    </select>
+
+    <select id="selectRepairById" parameterType="Long" resultMap="RepairResult">
+        <include refid="selectRepairVo"/>
+        WHERE r.id = #{id}
+    </select>
+
+
+    <select id="selectMyRepairList" parameterType="cn.dtransfer.admin.domain.Repair" resultMap="RepairResult">
+        <include refid="selectRepairVo"/>
+        <where>
+            <if test="sn != null and sn != ''">AND r.sn LIKE CONCAT('%', #{sn}, '%')</if>
+            <if test="status != null"> AND r.status =#{status.ordinal}</if>
+            <if test="createBy != null and createBy !=''"> AND r.create_by =#{createBy}</if>
+            <if test="parkId != null"> AND r.park_id =#{parkId}</if>
+            AND r.delete_flag = 0
+        </where>
+    </select>
+
+</mapper>

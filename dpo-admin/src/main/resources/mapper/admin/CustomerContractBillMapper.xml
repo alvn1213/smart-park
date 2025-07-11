@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContractBillMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractBill" id="CustomerContractBillResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="name"    column="name"    />
+        <result property="sn"    column="sn"    />
+        <result property="manageSn"    column="manage_sn"    />
+        <result property="status"    column="status" />
+        <result property="paymentCycle" column="payment_cycle"/>
+        <result property="type"    column="type"    />
+        <result property="billType" column="bill_type"/>
+        <result property="remark"    column="remark"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="receiveRentDate"    column="receive_rent_date"    />
+        <result property="billDate"    column="bill_date"    />
+        <result property="billStartDate"    column="bill_start_date"    />
+        <result property="billEndDate"    column="bill_end_date"    />
+        <result property="rentIncreaseWay"    column="rent_increase_way"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="receiveRent"    column="receive_rent"    />
+        <result property="managementTotalFee"    column="management_total_fee"    />
+        <result property="rent"    column="rent"    />
+        <result property="rentOverdue"    column="rent_overdue"    />
+        <result property="deposit"    column="deposit"    />
+        <result property="depositOverdue"    column="deposit_overdue"    />
+        <result property="powerFee"    column="power_fee"    />
+        <result property="receivePowerFee"    column="receive_power_fee"    />
+        <result property="waterFee"    column="water_fee"    />
+        <result property="receiveWaterFee"    column="receive_water_fee"    />
+        <result property="receiveManagementTotalFee"    column="receive_management_total_fee"    />
+        <result property="otherFee"    column="other_fee"    />
+        <result property="receiveOtherFee"    column="receive_other_fee"    />
+        <result property="refundFee"    column="refund_fee"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+        <association property="customerContract" javaType="cn.dtransfer.admin.domain.CustomerContract" resultMap="CustomerContractResult" />
+        <collection property="customerContractExpenses" ofType="cn.dtransfer.admin.domain.CustomerContractExpenses" resultMap="CustomerContractExpensesResult" />
+        <collection property="rooms" ofType="cn.dtransfer.admin.domain.Room" resultMap="RoomResult" />
+    </resultMap>
+
+    <!-- 关联合同 -->
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContract" id="CustomerContractResult">
+        <result property="customerId"    column="customer_id"    />
+        <result property="sn"    column="contract_sn"    />
+        <result property="pmSn"    column="pm_sn"    />
+        <result property="startDate"    column="icc_start_date"    />
+        <result property="endDate"    column="icc_end_date"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="name"    column="contract_name"    />
+        <result property="creditNo" column="credit_no"/>
+        <result property="address" column="address"/>
+        <result property="phone" column="phone"/>
+    </resultMap>
+
+
+    <!-- 房间 -->
+    <resultMap type="cn.dtransfer.admin.domain.Room" id="RoomResult">
+        <result property="id"    column="room_id"    />
+        <result property="name"    column="room_name"    />
+        <result property="rent"    column="rent"    />
+        <result property="layout"  column="layout"  />
+        <result property="rentType"    column="rent_type"    />
+        <result property="area"    column="area"    />
+        <result property="rentArea"    column="rent_area"    />
+        <result property="commonArea"    column="common_area"    />
+        <result property="parkId"    column="park_id"    />
+        <result property="buildingId" column="building_id"/>
+        <result property="buildingDetailId" column="building_detail_id"/>
+        <association property="park" javaType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult" />
+        <association property="building" javaType="cn.dtransfer.admin.domain.Building" resultMap="BuildingResult" />
+        <association property="buildingDetail" javaType="cn.dtransfer.admin.domain.BuildingDetail" resultMap="BuildingDetailResult" />
+    </resultMap>
+
+
+    <!-- 园区 -->
+    <resultMap type="cn.dtransfer.admin.domain.Park" id="ParkResult">
+        <result property="id"    column="park_id"    />
+        <result property="name"    column="park_name"    />
+    </resultMap>
+
+
+    <!-- 楼宇 -->
+    <resultMap type="cn.dtransfer.admin.domain.Building" id="BuildingResult">
+        <result property="id"    column="building_id"    />
+        <result property="buildingName"    column="building_name"    />
+    </resultMap>
+
+    <!-- 楼宇 -->
+    <resultMap type="cn.dtransfer.admin.domain.BuildingDetail" id="BuildingDetailResult">
+        <result property="id"    column="building_detail_id"    />
+        <result property="floorName"    column="floor_name"    />
+    </resultMap>
+
+    <!-- 账单费项（水、电费和其他费用） -->
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractExpenses" id="CustomerContractExpensesResult">
+        <result property="expenseName"    column="expense_name"/>
+        <result property="amount"    column="amount"    />
+        <result property="expenseType"    column="expense_type"    />
+        <result property="remark"    column="expense_remark"    />
+    </resultMap>
+
+
+    <!-- 当年账单每月应收，已收金额-->
+    <resultMap type="cn.dtransfer.admin.vo.CustomerContractBillBarChartVO" id="CustomerContractBillBarChartVOResult">
+        <result property="monthData"    column="monthData"    />
+        <result property="totalFee"    column="totalFee"    />
+        <result property="receiveFee"    column="receiveFee"    />
+    </resultMap>
+
+
+    <!-- 客户账单排行榜 -->
+    <resultMap type="cn.dtransfer.admin.vo.CustomerContractBillRankListVO" id="CustomerContractBillRankListVOResult">
+        <result property="name"    column="name"    />
+        <result property="total"    column="total"    />
+    </resultMap>
+
+    <sql id="selectCustomerContractBillVo">
+        SELECT
+            iccb.`name`,
+            iccb.`other_fee`,
+            iccb.`refund_fee`,
+            iccb.id,
+            iccb.contract_id,
+            iccb.name,
+            iccb.sn,
+            iccb.manage_sn,
+            iccb.status,
+            iccb.type,
+            iccb.invoice_type,
+            iccb.receive_rent,
+            iccb.remark,
+            iccb.end_date,
+            iccb.bill_date,
+            iccb.bill_start_date,
+            iccb.bill_end_date,
+            iccb.rent_increase_way,
+            iccb.management_total_fee,
+            iccb.receive_management_total_fee,
+            iccb.power_fee,
+            iccb.receive_power_fee,
+            iccb.water_fee,
+            iccb.receive_water_fee,
+            iccb.rent,
+            iccb.rent_overdue,
+            iccb.receive_rent_date,
+            iccb.deposit,
+            iccb.deposit_overdue,
+            iccb.create_by,
+            iccb.update_by,
+            iccb.create_time,
+            iccb.update_time,
+            iccb.receive_other_fee,
+            icc.`name` AS `contract_name`,
+            icc.`customer_name` AS `customer_name`,
+            icc.`sn` AS `contract_sn`,
+            icc.`pm_sn`,
+            icc.`credit_no`,
+            icc.`address`,
+            icc.`phone`,
+            icce.expense_name,
+            icce.amount,
+            icce.expense_type,
+            icce.remark AS expense_remark
+        FROM
+            dpo_customer_contract_bill iccb
+                LEFT JOIN dpo_customer_contract icc ON icc.`id` = iccb.`contract_id`
+                LEFT JOIN dpo_customer_contract_expenses icce ON icce.bill_id= iccb.id
+    </sql>
+
+
+    <sql id="selectCustomerContractBillExcel">
+        SELECT
+            iccb.id AS bill_id,
+            iccb.contract_id,
+            iccb.name,
+            iccb.sn,
+            iccb.manage_sn,
+            iccb.status,
+            iccb.type,
+            iccb.invoice_type,
+            iccb.receive_rent,
+            iccb.remark,
+            iccb.end_date,
+            iccb.bill_date,
+            iccb.bill_start_date,
+            iccb.bill_end_date,
+            iccb.rent_increase_way,
+            iccb.management_total_fee,
+            iccb.receive_management_total_fee,
+            iccb.receive_rent,
+            iccb.rent,
+            iccb.water_fee,
+            iccb.power_fee,
+            iccb.receive_water_fee,
+            iccb.receive_power_fee,
+            iccb.rent_overdue,
+            iccb.receive_rent_date,
+            iccb.deposit,
+            iccb.deposit_overdue,
+            iccb.create_by,
+            iccb.update_by,
+            iccb.create_time,
+            iccb.update_time,
+            iccr.room_id,
+            icc.`start_date` AS icc_start_date,
+            icc.`end_date` AS icc_end_date,
+            icc.`name` AS `contract_name`,
+            icc.`customer_name` AS `customer_name`,
+            icc.`sn` AS `contract_sn`,
+            IFNULL(icc.`pm_sn`,'-') AS pm_sn,
+            icc.`credit_no`,
+            icc.`address`,
+            icc.`phone`,
+            ib.`building_name`,
+            ibd.`floor_name`,
+            ir.`name` AS `room_name`,
+            ir.`layout`,
+            ir.`rent_area`,
+            ir.`common_area`,
+            ir.`area`,
+            icce.expense_name,
+            icce.amount,
+            icce.expense_type,
+            icce.remark
+        FROM
+            dpo_customer_contract_bill iccb
+                LEFT JOIN dpo_customer_contract icc ON icc.`id` = iccb.`contract_id`
+                LEFT JOIN dpo_customer_contract_room iccr ON icc.id = iccr.contract_id
+                LEFT JOIN dpo_room ir ON ir.id = iccr.room_id
+                LEFT JOIN `dpo_building` ib ON ib.`id` = ir.`building_id`
+                LEFT JOIN `dpo_building_detail` ibd ON ibd.`id` = ir.`building_detail_id`
+                LEFT JOIN  dpo_park AS ip ON ip.id = iccb.`park_id`
+                LEFT JOIN dpo_customer_contract_expenses icce ON icce.bill_id = iccb.id
+    </sql>
+
+    <select id="selectCustomerContractBillList" parameterType="CustomerContractBill" resultMap="CustomerContractBillResult">
+        SELECT
+        iccb.`other_fee`,
+        iccb.`receive_other_fee`,
+        iccb.`refund_fee`,
+        iccb.id,
+        iccb.contract_id,
+        iccb.name,
+        iccb.sn,
+        iccb.manage_sn,
+        iccb.status,
+        iccb.type,
+        iccb.invoice_type,
+        iccb.receive_rent,
+        iccb.remark,
+        iccb.end_date,
+        iccb.bill_date,
+        iccb.bill_type,
+        iccb.bill_start_date,
+        iccb.bill_end_date,
+        iccb.rent_increase_way,
+        iccb.management_total_fee,
+        iccb.receive_management_total_fee,
+        iccb.power_fee,
+        iccb.receive_power_fee,
+        iccb.water_fee,
+        iccb.receive_water_fee,
+        iccb.rent,
+        iccb.rent_overdue,
+        iccb.receive_rent_date,
+        iccb.deposit,
+        iccb.deposit_overdue,
+        iccb.create_by,
+        iccb.update_by,
+        iccb.create_time,
+        iccb.update_time,
+        icc.`name` AS `contract_name`,
+        icc.`customer_name` AS `customer_name`,
+        icc.`sn` AS `contract_sn`,
+        icc.`pm_sn`,
+        icc.`credit_no`,
+        icc.`address`,
+        icc.`phone`
+        FROM
+        dpo_customer_contract_bill iccb
+        LEFT JOIN dpo_customer_contract icc ON icc.`id` = iccb.`contract_id`
+        LEFT JOIN dpo_park ip ON ip.id = iccb.park_id
+        <where>
+            iccb.status <![CDATA[<>]]> 3 AND icc.type = 0 AND iccb.delete_flag = 0 AND iccb.`bill_date` IS NOT NULL
+            <if test="sn != null  and sn != ''"> AND iccb.sn LIKE CONCAT('%', #{sn}, '%')</if>
+            <if test="searchValue != null  and searchValue != ''"> AND icc.sn LIKE CONCAT('%', #{searchValue}, '%')</if>
+            <if test="queryCustomerName != null  and queryCustomerName != ''"> AND icc.customer_name LIKE CONCAT('%', #{queryCustomerName}, '%')</if>
+            <if test="queryMonth != null  and queryMonth != ''"> AND iccb.receive_rent_date LIKE CONCAT('%', #{queryMonth}, '%')</if>
+            <if test="status != null"> AND iccb.status = #{status.value} </if>
+            <if test="type != null"> AND icc.type = #{type.value} </if>
+            <if test="billType != null"> AND iccb.bill_type = #{billType.value} </if>
+            <if test="isOverdue == 1"> AND iccb.receive_rent_date <![CDATA[<]]> CURRENT_DATE AND iccb.status IN(0, 2) </if>
+            <if test="isOverdue == 0"> AND((iccb.receive_rent_date <![CDATA[>]]> CURRENT_DATE AND iccb.status IN(0, 2)) or iccb.status = 1) </if>
+        </where>
+        ORDER BY iccb.create_time DESC
+    </select>
+
+    <select id="selectCustomerContractBillById" parameterType="Long" resultMap="CustomerContractBillResult">
+        <include refid="selectCustomerContractBillVo"/>
+        WHERE iccb.id = #{id}
+    </select>
+
+
+    <update id="batchConfirmReceiveAmount" parameterType="String">
+        UPDATE  dpo_customer_contract_bill SET status = 1, receive_rent = rent, receive_management_total_fee = management_total_fee,
+        receive_power_fee = power_fee, receive_water_fee = water_fee, receive_other_fee = other_fee WHERE status = 0 AND id IN
+        <foreach item="billId" collection="array" open="(" separator="," close=")">
+            #{billId}
+        </foreach>
+    </update>
+
+    <update id="batchCancelReceiveAmount" parameterType="String">
+        UPDATE  dpo_customer_contract_bill SET status = 0, receive_rent = 0, receive_management_total_fee = 0,
+        receive_power_fee = 0, receive_water_fee = 0 WHERE status = 1 AND id IN
+        <foreach item="billId" collection="array" open="(" separator="," close=")">
+            #{billId}
+        </foreach>
+    </update>
+
+
+    <select id="selectCustomerContractBillExcelList" parameterType="cn.dtransfer.admin.domain.CustomerContractBill" resultMap="CustomerContractBillResult">
+        <include refid="selectCustomerContractBillExcel"/>
+        <where>
+            iccb.status <![CDATA[<>]]> 3 AND icc.type = 0
+            <if test="sn != null  and sn != ''"> AND iccb.sn LIKE CONCAT('%', #{sn}, '%')</if>
+            <if test="searchValue != null  and searchValue != ''"> AND icc.sn LIKE CONCAT('%', #{searchValue}, '%')</if>
+            <if test="queryCustomerName != null  and queryCustomerName != ''"> AND icc.customer_name LIKE CONCAT('%', #{queryCustomerName}, '%')</if>
+            <if test="queryMonth != null  and queryMonth != ''"> AND iccb.receive_rent_date LIKE CONCAT('%', #{queryMonth}, '%')</if>
+            <if test="status != null"> AND iccb.status = #{status.value} </if>
+            <if test="type != null"> AND icc.type = #{type.value} </if>
+            <if test="isOverdue == 1"> AND iccb.receive_rent_date <![CDATA[<]]> CURRENT_DATE AND iccb.status IN(0, 2) </if>
+            <if test="isOverdue == 0"> AND((iccb.receive_rent_date <![CDATA[>]]> CURRENT_DATE AND iccb.status IN(0, 2)) or iccb.status = 1) </if>
+        </where>
+        ORDER BY iccb.receive_rent_date ASC
+    </select>
+
+    <select id="selectCustomerContractBillContractId" parameterType="Long" resultMap="CustomerContractBillResult">
+        <include refid="selectCustomerContractBillExcel"/>
+        WHERE iccb.contract_id = #{ids}
+    </select>
+
+    <update id="updatePowerWaterFeeBySn">
+        UPDATE  dpo_customer_contract_bill SET power_fee = #{powerFee}, water_fee = #{waterFee} WHERE sn = #{sn}
+    </update>
+
+    <update id="updateRentBySn">
+        UPDATE  dpo_customer_contract_bill SET receive_rent = #{rent}, receive_management_total_fee = #{managementTotalFee}, receive_water_fee = #{receiveWaterFee}, receive_power_fee = #{receivePowerFee}, status = #{status.value} WHERE sn = #{sn}
+    </update>
+
+    <update id="voidedContractBillByContractIds" parameterType="String">
+        UPDATE  dpo_customer_contract_bill SET status = 3 WHERE status = 0 AND contract_id IN
+        <foreach item="contractId" collection="array" open="(" separator="," close=")">
+            #{contractId}
+        </foreach>
+    </update>
+
+    <!-- 账单总应收与已收统计 -->
+    <select id="selectSumCustomerContractBill" resultType="java.util.Map">
+        SELECT
+        IFNULL(SUM(IFNULL(iccb.rent, 0)+IFNULL(iccb.deposit, 0)+IFNULL(iccb.management_total_fee, 0)
+        +IFNULL(iccb.power_fee, 0)+IFNULL(iccb.water_fee, 0)+IFNULL(iccb.other_fee, 0)+IFNULL(iccb.refund_fee, 0)), 0)
+        AS totalFee,
+        IFNULL(SUM(IFNULL(iccb.receive_rent, 0)+IFNULL(iccb.receive_management_total_fee,
+        0)+IFNULL(iccb.receive_power_fee, 0)
+        +IFNULL(iccb.receive_water_fee, 0)+IF(iccb.status = 1, iccb.other_fee, 0)+IF(iccb.status = 1,iccb.refund_fee,
+        0)), 0)
+        AS receive
+        FROM
+        dpo_customer_contract_bill iccb
+        <where>
+            AND iccb.status <![CDATA[<>]]> 3
+            AND iccb.type = 0
+            AND iccb.delete_flag = 0
+            <if test="queryMonth != null  and queryMonth != ''"> AND iccb.receive_rent_date LIKE CONCAT('%', #{queryMonth}, '%')</if>
+        </where>
+    </select>
+
+    <!-- 租金总应收与已收统计 -->
+    <select id="selectSumRentCustomerContractBill" resultType="java.util.Map">
+        SELECT
+        IFNULL(SUM(IFNULL(iccb.rent, 0)+IFNULL(iccb.deposit, 0)), 0) AS totalFee,
+        IFNULL(SUM(IFNULL(iccb.receive_rent, 0)), 0) AS receive
+        FROM
+        dpo_customer_contract_bill iccb
+        <where>
+            AND iccb.status <![CDATA[<>]]> 3
+            AND iccb.type = 0
+            AND iccb.delete_flag = 0
+            <if test="queryMonth != null  and queryMonth != ''"> AND iccb.receive_rent_date LIKE CONCAT('%', #{queryMonth}, '%')</if>
+        </where>
+    </select>
+
+    <!-- 物业管理费总应收与已收统计 -->
+    <select id="selectSumManagementCustomerContractBill" resultType="java.util.Map">
+        SELECT
+        IFNULL(SUM(IFNULL(iccb.management_total_fee, 0)), 0) AS totalFee,
+        IFNULL(SUM(IFNULL(iccb.receive_management_total_fee, 0)), 0) AS receive
+        FROM
+        dpo_customer_contract_bill iccb
+        <where>
+            AND iccb.status <![CDATA[<>]]> 3
+            AND iccb.type = 0
+            AND iccb.delete_flag = 0
+            <if test="queryMonth != null  and queryMonth != ''"> AND iccb.receive_rent_date LIKE CONCAT('%', #{queryMonth}, '%')</if>
+        </where>
+    </select>
+
+    <!-- 水电费总应收与已收统计 -->
+    <select id="selectSumPWCustomerContractBill" resultType="java.util.Map">
+        SELECT
+        IFNULL(SUM(IFNULL(iccb.power_fee, 0) + IFNULL(iccb.water_fee, 0)), 0) AS totalFee,
+        IFNULL(SUM(IFNULL(iccb.receive_power_fee, 0) + IFNULL(iccb.receive_water_fee, 0)), 0) AS receive
+        FROM
+        dpo_customer_contract_bill iccb
+        <where>
+            AND iccb.status <![CDATA[<>]]> 3
+            AND iccb.type = 0
+            AND iccb.delete_flag = 0
+            <if test="queryMonth != null  and queryMonth != ''"> AND iccb.receive_rent_date LIKE CONCAT('%', #{queryMonth}, '%')</if>
+        </where>
+    </select>
+
+
+    <!-- 账单每年每月总应收统计 （只统计合同账单且不是作废的账单）-->
+    <select id="selectSumCustomerContractBillByMonth" resultMap="CustomerContractBillBarChartVOResult">
+        SELECT
+            *
+        FROM
+            (SELECT
+                 ANY_VALUE(CONCAT(
+                         DATE_FORMAT(iccb.receive_rent_date, '%m'),
+                         '月'
+                     )) AS monthData,
+                 IFNULL(
+                         SUM(
+                                     IFNULL(iccb.rent, 0) + IFNULL(iccb.deposit, 0) + IFNULL(iccb.management_total_fee, 0) +
+                                     IFNULL(iccb.power_fee, 0) + IFNULL(iccb.water_fee, 0) + IFNULL(iccb.other_fee, 0) + IFNULL(iccb.refund_fee, 0)
+                             ),
+                         0
+                     ) AS totalFee,
+                 IFNULL(SUM(IFNULL(iccb.receive_rent, 0) + IFNULL(iccb.receive_management_total_fee, 0) + IFNULL(iccb.receive_power_fee, 0)
+                     + IFNULL(iccb.receive_water_fee, 0) + IF(iccb.status = 1, iccb.other_fee, 0) + IF(iccb.status = 1,iccb.refund_fee, 0)), 0)
+                       AS receiveFee
+             FROM
+                 dpo_customer_contract_bill iccb
+             WHERE iccb.receive_rent_date LIKE CONCAT('%', #{queryYear}, '%')
+               AND iccb.type = 0
+               AND iccb.status <![CDATA[<>]]> 3
+             GROUP BY DATE_FORMAT(iccb.receive_rent_date, '%Y-%m')
+             ORDER BY DATE_FORMAT(iccb.receive_rent_date, '%Y-%m')) tmp
+        WHERE tmp.totalFee > 0
+    </select>
+
+
+    <!-- 客户账单排行榜 (只统计正式合同的账单)-->
+    <select id="selectCustomerRankList" resultMap="CustomerContractBillRankListVOResult">
+        SELECT * FROM
+        (
+        SELECT ic.name,
+        SUM(
+        IFNULL(iccb.rent,0) + IFNULL(iccb.deposit,0) + IFNULL(iccb.management_total_fee,0)
+        ) + SUM(IFNULL(icce.amount,0)) AS total
+        FROM
+        dpo_customer_contract_bill iccb
+        LEFT JOIN dpo_customer_contract icc ON icc.`id` = iccb.`contract_id`
+        LEFT JOIN dpo_customer_contract_expenses icce ON icce.`bill_id` = iccb.`id`
+        LEFT JOIN dpo_customer ic ON ic.id = icc.`customer_id`
+        <where>
+            <if test="queryDate != null  and queryDate != ''"> AND iccb.receive_rent_date LIKE CONCAT('%', #{queryDate}, '%')</if>
+            AND iccb.type = 0
+            AND iccb.status <![CDATA[<>]]> 3
+        </where>
+        GROUP BY icc.`customer_id`) AS temp
+        ORDER BY temp.total DESC LIMIT 10
+    </select>
+
+
+    <select id="selectCustomerContractBillBySn" parameterType="String" resultMap="CustomerContractBillResult">
+        <include refid="selectCustomerContractBillVo"/>
+        WHERE sn = #{sn}
+    </select>
+</mapper>

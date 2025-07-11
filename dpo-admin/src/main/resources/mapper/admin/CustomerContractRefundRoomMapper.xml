@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContractRefundRoomMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractRefundRoom" id="CustomerContractRefundRoomResult">
+        <result property="refundId"    column="refund_id"    />
+        <result property="roomId"    column="room_id"    />
+    </resultMap>
+
+    <sql id="selectCustomerContractRefundRoomVo">
+        SELECT id, refund_id, room_id, version, delete_flag, create_by, create_time, update_by, update_time, tenant_id FROM dpo_customer_contract_refund_room
+    </sql>
+
+    <select id="selectCustomerContractRefundRoomList" parameterType="CustomerContractRefundRoom" resultMap="CustomerContractRefundRoomResult">
+        <include refid="selectCustomerContractRefundRoomVo"/>
+        <where>
+        </where>
+    </select>
+
+    <select id="selectCustomerContractRefundRoomById" parameterType="Long" resultMap="CustomerContractRefundRoomResult">
+        <include refid="selectCustomerContractRefundRoomVo"/>
+        WHERE id = #{id}
+    </select>
+
+    <!-- 根据提交合同修改当前房间的租赁状态 -->
+    <update id="updateRoomStatus">
+        UPDATE `dpo_room` ir SET ir.`status` = #{status.value} WHERE ir.`id` IN(
+        SELECT iccr.`room_id` FROM
+        `dpo_customer_contract_room` iccr WHERE iccr.`contract_id` in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>

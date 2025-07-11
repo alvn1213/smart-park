@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ActivityDetailMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ActivityDetail" id="ActivityDetailResult">
+        <result property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="sex" column="sex"/>
+        <result property="phone" column="phone"/>
+        <result property="signDate" column="sign_date"/>
+        <result property="userId" column="user_id"/>
+        <result property="parkId" column="park_id"/>
+        <result property="actId" column="act_id"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <association property="activity" javaType="cn.dtransfer.admin.domain.Activity" resultMap="ActivityResult"/>
+    </resultMap>
+
+    <resultMap type="cn.dtransfer.admin.domain.Activity" id="ActivityResult">
+        <result property="id" column="aId"/>
+        <result property="name" column="name"/>
+
+    </resultMap>
+
+    <sql id="selectActivityDetailVo">
+        SELECT d.id,
+               d.user_name,
+               d.sex,
+               d.phone,
+               d.sign_date,
+               d.user_id,
+               d.park_id,
+               d.act_id,
+               d.VERSION,
+               d.delete_flag,
+               d.create_by,
+               d.create_time,
+               d.update_by,
+               d.update_time,
+               d.tenant_id,
+               a.name,
+               a.id AS aId
+        FROM dpo_activity_detail AS d
+                 LEFT JOIN dpo_activity AS a ON a.id = d.act_id
+    </sql>
+
+    <select id="selectActivityDetailList" parameterType="ActivityDetail" resultMap="ActivityDetailResult">
+        <include refid="selectActivityDetailVo"/>
+        <where>
+            <if test="userName != null  and userName != ''">AND d.user_name LIKE CONCAT('%', #{userName}, '%')</if>
+            <if test="phone != null  and phone != ''">AND d.phone LIKE CONCAT('%', #{phone}, '%')</if>
+        </where>
+    </select>
+
+
+</mapper>

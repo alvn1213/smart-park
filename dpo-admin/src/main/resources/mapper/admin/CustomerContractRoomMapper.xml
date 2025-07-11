@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContractRoomMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractRoom" id="CustomerContractRoomResult">
+        <result property="contractId" column="contract_id"/>
+        <result property="roomId" column="room_id"/>
+    </resultMap>
+
+    <sql id="selectCustomerContractRoomVo">
+        SELECT contract_id, room_id FROM dpo_customer_contract_room
+    </sql>
+
+    <!-- 根据提交合同修改当前房间的租赁状态 -->
+    <update id="updateRoomStatus">
+        UPDATE `dpo_room` ir SET ir.`status` = #{status.value}, ir.`update_status_time` = CURRENT_TIMESTAMP WHERE
+        ir.`id` IN(
+        SELECT iccr.`room_id` FROM
+        `dpo_customer_contract_room` iccr WHERE iccr.`contract_id` IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <select id="findByContractId" resultType="cn.dtransfer.admin.domain.CustomerContractRoom">
+        <include refid="selectCustomerContractRoomVo"/>
+        WHERE contract_id = #{contractId}
+    </select>
+
+
+</mapper>

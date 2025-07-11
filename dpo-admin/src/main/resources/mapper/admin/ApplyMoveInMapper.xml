@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ApplyMoveInMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ApplyMoveIn" id="ApplyMoveInResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="applyName"    column="apply_name"    />
+        <result property="address"    column="address"    />
+        <result property="area"    column="area"    />
+        <result property="userName"    column="user_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="status"    column="status"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="rentStartTime"    column="rent_start_time"    />
+        <result property="rentEndTime"    column="rent_end_time"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="relation"    column="relation"    />
+        <result property="promise"    column="promise"    />
+        <result property="createUserId"    column="create_user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+        <result property="remark"    column="remark"    />
+        <collection property="applyMoveInFileList" ofType="cn.dtransfer.admin.domain.ApplyMoveInFile" resultMap="ApplyMoveInFileResult"/>
+    </resultMap>
+
+    <resultMap id="ApplyMoveInFileResult" type="cn.dtransfer.admin.domain.ApplyMoveInFile">
+        <result property="id" column="file_id"/>
+        <result property="moveInId" column="move_in_id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="filePath" column="file_path"/>
+    </resultMap>
+
+    <sql id="selectApplyMoveInVo">
+        SELECT
+            iam.id,
+            iam.type,
+            iam.apply_name,
+            iam.address,
+            iam.area,
+            iam.user_name,
+            iam.phone,
+            iam.status,
+            iam.contract_no,
+            iam.rent_start_time,
+            iam.rent_end_time,
+            iam.company_name,
+            iam.relation,
+            iam.promise,
+            iam.create_user_id,
+            iam.create_by,
+            iam.create_time,
+            iam.update_by,
+            iam.update_time,
+            iam.version,
+            iam.delete_flag,
+            iam.tenant_id,
+            iam.park_id,
+            iam.remark,
+            iamf.id AS file_id,
+            iamf.file_name,
+            iamf.file_path
+        FROM
+            dpo_apply_move_in iam
+                LEFT JOIN dpo_apply_move_in_file iamf
+                          ON iam.id = iamf.move_in_id
+    </sql>
+
+    <sql id="selectApplyMoveInVoList">
+        SELECT
+            iam.id,
+            iam.type,
+            iam.apply_name,
+            iam.address,
+            iam.area,
+            iam.user_name,
+            iam.phone,
+            iam.status,
+            iam.contract_no,
+            iam.rent_start_time,
+            iam.rent_end_time,
+            iam.company_name,
+            iam.relation,
+            iam.promise,
+            iam.create_user_id,
+            iam.create_by,
+            iam.create_time,
+            iam.update_by,
+            iam.update_time,
+            iam.version,
+            iam.delete_flag,
+            iam.tenant_id,
+            iam.park_id,
+            iam.remark
+        FROM
+            dpo_apply_move_in iam
+    </sql>
+
+    <select id="selectApplyMoveInByUserId" parameterType="Long" resultMap="ApplyMoveInResult">
+        <include refid="selectApplyMoveInVo"/>
+        WHERE iam.create_user_id = #{createUserId}
+    </select>
+
+
+    <select id="selectList" resultMap="ApplyMoveInResult">
+        <include refid="selectApplyMoveInVoList"></include>
+        ${ew.customSqlSegment}
+    </select>
+
+
+    <select id="selectById" parameterType="Long" resultMap="ApplyMoveInResult">
+        <include refid="selectApplyMoveInVo"/>
+        WHERE iam.id = #{id}
+    </select>
+
+</mapper>

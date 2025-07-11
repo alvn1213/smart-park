@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ClueMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.Clue" id="ClueResult">
+        <result property="id" column="id"/>
+        <result property="clueName" column="clue_name"/>
+        <result property="source" column="source"/>
+        <result property="channelCategory" column="channel_category"/>
+        <result property="channelName" column="channel_name"/>
+        <result property="remark" column="remark"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="customerStatus" column="customer_status"/>
+        <result property="assignmentTime" column="assignment_time"/>
+        <result property="assignmentStatus" column="assignment_status"/>
+        <result property="userId" column="user_id"/>
+        <result property="closeReason" column="close_reason"/>
+        <result property="closeExplain" column="close_explain"/>
+        <result property="customerType" column="customer_type"/>
+        <result property="creditNo" column="credit_no"/>
+        <result property="sector" column="sector"/>
+        <result property="contacts" column="contacts"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="mailAddress" column="mail_address"/>
+        <result property="postalCode" column="postal_code"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+        <association property="user" javaType="cn.dtransfer.system.domain.User" resultMap="UserResult"/>
+    </resultMap>
+
+    <resultMap id="UserResult" type="cn.dtransfer.system.domain.User">
+        <id property="id" column="userId"/>
+        <result property="username" column="username"/>
+        <result property="mobile" column="mobile"/>
+    </resultMap>
+
+
+    <sql id="selectClueVo">
+        SELECT r.id,
+               r.clue_name,
+               r.source,
+               r.channel_category,
+               r.channel_name,
+               r.remark,
+               r.customer_name,
+               r.user_id,
+               r.customer_type,
+               r.credit_no,
+               r.sector,
+               r.contacts,
+               r.phone,
+               r.assignment_status,
+               r.assignment_time,
+               r.close_explain,
+               r.close_reason,
+               r.email,
+               r.mail_address,
+               r.postal_code,
+               r.create_by,
+               r.update_by,
+               r.create_time,
+               r.update_time,
+               r.customer_status,
+               r.park_id,
+               u.id as userId,
+               u.username,
+               u.mobile
+        FROM dpo_clue r
+                 LEFT JOIN sys_user u ON r.user_id = u.id
+    </sql>
+
+    <select id="selectClueList" parameterType="cn.dtransfer.admin.domain.Clue" resultMap="ClueResult">
+        <include refid="selectClueVo"/>
+        <where>
+            <if test="clueName != null  and clueName != ''">
+                AND r.clue_name LIKE CONCAT('%', #{clueName}, '%')
+                OR r.customer_name LIKE CONCAT('%', #{clueName}, '%')
+                OR r.contacts LIKE CONCAT('%', #{clueName}, '%')
+                OR r.phone LIKE CONCAT('%', #{clueName}, '%')
+                OR r.channel_name LIKE CONCAT('%', #{clueName}, '%')
+                OR r.create_by LIKE CONCAT('%', #{clueName}, '%')
+            </if>
+            <if test="userId !=null">AND r.user_id = #{userId}</if>
+            <if test="source != null">AND r.source = #{source}</if>
+            <if test="customerStatus !=null">AND r.customer_status = #{customerStatus}</if>
+            <if test="assignmentStatus !=null">AND r.assignment_status = #{assignmentStatus}</if>
+            AND r.delete_flag = 0
+        </where>
+    </select>
+
+    <select id="selectClueById" parameterType="Long" resultMap="ClueResult">
+        <include refid="selectClueVo"/>
+        WHERE r.id = #{id}
+    </select>
+
+
+</mapper>

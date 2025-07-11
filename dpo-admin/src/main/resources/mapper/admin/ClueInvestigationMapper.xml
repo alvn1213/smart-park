@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ClueInvestigationMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ClueInvestigation" id="ClueInvestigationResult">
+        <result property="id" column="id"/>
+        <result property="clueId" column="clue_id"/>
+        <result property="intentionState" column="intention_state"/>
+        <result property="investigationTime" column="investigation_time"/>
+        <result property="investigationMode" column="investigation_mode"/>
+        <result property="investigationRecord" column="investigation_record"/>
+        <result property="planTime" column="plan_time"/>
+        <result property="planDetailed" column="plan_detailed"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+        <association property="user" javaType="cn.dtransfer.system.domain.User" resultMap="UserResult"/>
+        <association property="clue" javaType="cn.dtransfer.admin.domain.Clue" resultMap="ClueResult"/>
+    </resultMap>
+
+    <resultMap id="UserResult" type="cn.dtransfer.system.domain.User">
+        <id property="id" column="userId"/>
+        <result property="username" column="username"/>
+        <result property="mobile" column="mobile"/>
+    </resultMap>
+
+    <resultMap id="ClueResult" type="cn.dtransfer.admin.domain.Clue">
+        <id property="id" column="clueId"/>
+        <result property="clueName" column="clue_name"/>
+        <result property="source" column="source"/>
+        <result property="userId" column="user_id"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="customerStatus" column="customer_status"/>
+        <result property="assignmentTime" column="assignment_time"/>
+        <result property="contacts" column="contacts"/>
+        <result property="phone" column="phone"/>
+        <result property="channelName" column="channel_name"/>
+        <result property="createBy" column="clue_create_by"/>
+        <result property="createTime" column="clue_create_time"/>
+        <result property="updateTime" column="clue_update_time"/>
+    </resultMap>
+
+    <sql id="selectClueInvestigationVo">
+        SELECT r.id          AS clueId,
+               r.clue_name,
+               r.source,
+               r.customer_name,
+               r.user_id,
+               r.phone,
+               r.contacts,
+               r.channel_name,
+               r.assignment_time,
+               r.create_by   AS clue_create_by,
+               r.create_time AS clue_create_time,
+               r.update_time AS clue_update_time,
+               r.customer_status,
+               i.id          AS investigationId,
+               i.intention_state,
+               i.investigation_time,
+               i.investigation_mode,
+               i.investigation_record,
+               i.plan_time,
+               i.park_id,
+               i.plan_detailed,
+               u.id          AS userId,
+               u.username,
+               u.mobile
+        FROM dpo_clue r
+                 LEFT JOIN dpo_clue_investigation i ON i.clue_id = r.id
+                 LEFT JOIN sys_user u ON r.user_id = u.id
+    </sql>
+
+    <select id="selectClueInvestigationList" parameterType="cn.dtransfer.admin.domain.ClueInvestigation"
+            resultMap="ClueInvestigationResult">
+        <include refid="selectClueInvestigationVo"/>
+        <where>
+            <if test="retrieval !=null">
+                AND r.clue_name LIKE CONCAT('%', #{retrieval}, '%')
+                OR r.customer_name LIKE CONCAT('%', #{retrieval}, '%')
+                OR r.contacts LIKE CONCAT('%', #{retrieval}, '%')
+                OR r.phone LIKE CONCAT('%', #{retrieval}, '%')
+                OR r.channel_name LIKE CONCAT('%', #{retrieval}, '%')
+                OR r.create_by LIKE CONCAT('%', #{retrieval}, '%')
+            </if>
+            <if test="source != null">AND r.source = #{source}</if>
+            <if test="userId !=null">AND r.user_id = #{userId}</if>
+            <if test="customerStatus !=null">AND r.customer_status = #{customerStatus}</if>
+            <if test="assignmentStatus !=null">AND r.assignment_status = #{assignmentStatus}</if>
+            AND r.delete_flag = 0
+            AND IFNULL(r.`user_id`,NULL) = IFNULL(u.id,NULL)
+        </where>
+    </select>
+
+    <select id="selectClueInvestigationById" parameterType="Long" resultMap="ClueInvestigationResult">
+        <include refid="selectClueInvestigationVo"/>
+        WHERE i.id = #{id}
+    </select>
+
+</mapper>

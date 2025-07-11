@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.PolicyBannerMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.PolicyBanner" id="PolicyBannerResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="bannerDesc" column="banner_desc"/>
+        <result property="bannerImg" column="banner_img"/>
+        <result property="hits" column="hits"/>
+        <result property="isMarketable" column="is_marketable"/>
+        <result property="marketableTime" column="marketable_time"/>
+        <result property="uri" column="uri"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+    </resultMap>
+
+</mapper>

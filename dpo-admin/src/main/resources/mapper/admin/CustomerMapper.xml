@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.Customer" id="CustomerResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="headImg"    column="head_img"    />
+        <result property="bannerImages"    column="banner_images" jdbcType="LONGVARCHAR"
+                javaType="java.util.ArrayList" typeHandler="cn.dtransfer.admin.handler.BannerImageHandler"  />
+        <result property="type"    column="type"    />
+        <result property="customerStatus"    column="customer_status"    />
+        <result property="sector"    column="sector"    />
+        <result property="country"    column="country"    />
+        <result property="process"    column="process"    />
+        <result property="contacts"    column="contacts"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="creditNo"    column="credit_no"    />
+        <result property="mailAddress"    column="mail_address"    />
+        <result property="postalCode"    column="postal_code"    />
+        <result property="channelType"    column="channel_type"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="isBlacklist"    column="is_blacklist"    />
+        <result property="remark"    column="remark"    />
+        <result property="regNo"    column="reg_no"    />
+        <result property="status"    column="status"    />
+        <result property="orgNo"    column="org_no"    />
+        <result property="operName"    column="oper_name"    />
+        <result property="econKind"    column="econ_kind"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="belongOrg"    column="belong_org"    />
+        <result property="registCapi"    column="regist_capi"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="address"    column="address"    />
+        <result property="scope"    column="scope"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+        <association property="park" javaType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult" />
+    </resultMap>
+
+    <resultMap id="ParkResult" type="cn.dtransfer.admin.domain.Park">
+        <result property="name"    column="pName"    />
+    </resultMap>
+
+    <sql id="selectCustomerVo">
+        SELECT
+            ic.id,
+            ic.name,
+            ic.short_name,
+            ic.head_img,
+            ic.banner_images,
+            ic.type,
+            ic.customer_status,
+            ic.sector,
+            ic.country,
+            ic.process,
+            ic.contacts,
+            ic.phone,
+            ic.email,
+            ic.credit_no,
+            ic.mail_address,
+            ic.postal_code,
+            ic.channel_type,
+            ic.channel_name,
+            ic.is_blacklist,
+            ic.remark,
+            ic.reg_no,
+            ic.status,
+            ic.org_no,
+            ic.oper_name,
+            ic.econ_kind,
+            ic.start_date,
+            ic.belong_org,
+            ic.regist_capi,
+            ic.end_date,
+            ic.address,
+            ic.scope,
+            ic.create_by,
+            ic.create_time,
+            ic.update_by,
+            ic.update_time,
+            ic.version,
+            ic.delete_flag,
+            ic.tenant_id,
+            ic.park_id,
+            ip.name AS pName
+        FROM
+            dpo_customer AS ic LEFT JOIN dpo_park AS ip ON ip.id = ic.`park_id`
+    </sql>
+
+    <select id="selectCustomerList" parameterType="cn.dtransfer.admin.domain.Customer" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        <where>
+            <if test="name != null  and name != ''"> AND ic.name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="contacts != null  and contacts != ''"> AND ic.contacts LIKE CONCAT('%', #{contacts}, '%')</if>
+            <if test="phone != null  and phone != ''"> AND phone LIKE CONCAT('%', #{phone}, '%')</if>
+            <if test="deleteFlag != null"> and ic.delete_flag = #{deleteFlag} </if>
+        </where>
+    </select>
+
+    <select id="selectCustomerById" parameterType="Long" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        WHERE ic.id = #{id}
+    </select>
+
+</mapper>

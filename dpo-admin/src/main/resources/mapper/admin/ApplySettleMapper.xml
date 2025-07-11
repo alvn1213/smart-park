@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ApplySettleMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ApplySettle" id="ApplySettleResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="operName"    column="oper_name"    />
+        <result property="needArea"    column="need_area"    />
+        <result property="persons"    column="persons"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="userName"    column="user_name"    />
+        <result property="createUserId"    column="create_user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+        <result property="remark"    column="remark"    />
+        <collection property="applySettleFileList" ofType="cn.dtransfer.admin.domain.ApplySettleFile" resultMap="ApplySettleFilesResult"/>
+    </resultMap>
+
+    <resultMap id="ApplySettleFilesResult" type="cn.dtransfer.admin.domain.ApplySettleFile">
+        <result property="id"       column="file_id"/>
+        <result property="applySettleId" column="apply_settle_id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="filePath" column="file_path"/>
+    </resultMap>
+
+    <sql id="selectApplySettleVo">
+        SELECT
+            ias.id,
+            ias.name,
+            ias.oper_name,
+            ias.need_area,
+            ias.persons,
+            ias.type,
+            ias.start_time,
+            ias.phone,
+            ias.email,
+            ias.status,
+            ias.user_name,
+            ias.create_user_id,
+            ias.create_by,
+            ias.create_time,
+            ias.update_by,
+            ias.update_time,
+            ias.version,
+            ias.delete_flag,
+            ias.tenant_id,
+            ias.park_id,
+            ias.remark,
+            iasf.`id` AS file_id,
+            iasf.`file_name`,
+            iasf.`file_path`
+        FROM
+            dpo_apply_settle ias
+                LEFT JOIN dpo_apply_settle_file iasf
+                          ON ias.id = iasf.`apply_settle_id`
+    </sql>
+
+
+    <sql id="selectApplySettleVoList">
+        SELECT
+            ias.id,
+            ias.name,
+            ias.oper_name,
+            ias.need_area,
+            ias.persons,
+            ias.start_time,
+            ias.phone,
+            ias.email,
+            ias.type,
+            ias.status,
+            ias.user_name,
+            ias.create_user_id,
+            ias.create_by,
+            ias.create_time,
+            ias.update_by,
+            ias.update_time,
+            ias.version,
+            ias.delete_flag,
+            ias.tenant_id,
+            ias.park_id,
+            ias.remark
+        FROM
+            dpo_apply_settle ias
+
+    </sql>
+
+    <select id="selectApplySettleByUSerId" parameterType="Long" resultMap="ApplySettleResult">
+        <include refid="selectApplySettleVo"/>
+        WHERE ias.create_user_id = #{createUserId}
+    </select>
+
+    <select id="selectList" resultMap="ApplySettleResult">
+      <include refid="selectApplySettleVoList"></include>
+      ${ew.customSqlSegment}
+    </select>
+
+
+    <select id="selectById" parameterType="Long" resultMap="ApplySettleResult">
+        <include refid="selectApplySettleVo"></include>
+        WHERE ias.id = #{id}
+    </select>
+
+</mapper>

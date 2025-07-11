@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContractBillReportVOMapper">
+
+    <resultMap type="cn.dtransfer.admin.vo.CustomerContractBillReportVO" id="CustomerContractBillReportVOResult">
+        <result property="customerId"    column="customer_id"    />
+        <result property="managementTotalFee" column="management_total_fee"/>
+        <result property="totalRent"    column="total_rent"    />
+        <result property="receiveTotalRent"    column="receive_total_rent"    />
+        <result property="receiveManagementTotalFee"    column="receive_management_total_fee"    />
+        <result property="powerFee" column="power_fee"/>
+        <result property="waterFee" column="water_fee"/>
+        <result property="deposit" column="deposit"/>
+        <result property="otherFee" column="other_fee"/>
+        <result property="refundFee" column="refund_fee"/>
+        <result property="receivePowerFee" column="receive_power_fee"/>
+        <result property="receiveWaterFee" column="receive_water_fee"/>
+        <association property="customer" javaType="cn.dtransfer.admin.domain.Customer" resultMap="CustomerResult" />
+    </resultMap>
+
+    <resultMap type="cn.dtransfer.admin.domain.Customer" id="CustomerResult">
+        <result property="id"    column="customer_id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+
+
+    <select id="selectCustomerContractBillReportVOList"  resultMap="CustomerContractBillReportVOResult">
+        SELECT
+            iccb.`customer_id`,
+            ic.`name`,
+            SUM(iccb.`rent`) AS total_rent,
+            SUM(IFNULL(iccb.`receive_rent`, 0)) AS receive_total_rent,
+            SUM(IFNULL(iccb.`management_total_fee`,0)) AS management_total_fee,
+            SUM(IFNULL(iccb.`receive_management_total_fee`, 0)) AS receive_management_total_fee,
+            SUM(IFNULL(iccb.`power_fee`, 0)) AS power_fee,
+            SUM(IFNULL(iccb.`receive_power_fee`, 0)) AS receive_power_fee,
+            SUM(IFNULL(iccb.`water_fee`, 0)) AS water_fee,
+            SUM(IFNULL(iccb.`receive_water_fee`, 0)) AS receive_water_fee,
+            SUM(IFNULL(iccb.`deposit`, 0)) AS deposit,
+            SUM(IFNULL(iccb.`other_fee`, 0)) AS other_fee,
+            SUM(IFNULL(iccb.`refund_fee`, 0)) AS refund_fee
+        FROM
+            `dpo_customer_contract_bill` iccb
+            LEFT JOIN `dpo_customer` ic ON iccb.`customer_id` = ic.`id`
+        <where>
+            iccb.status <![CDATA[<>]]> 3
+            AND iccb.type = 0
+            AND iccb.delete_flag = 0
+            AND ic.delete_flag = 0
+            <if test="customerName != null  and customerName != ''"> AND ic.name LIKE CONCAT('%', #{customerName}, '%')</if>
+            <if test="queryStartMonth != null  and queryStartMonth != ''"> AND iccb.`receive_rent_date` <![CDATA[>=]]> #{queryStartMonth}</if>
+            <if test="queryEndMonth != null  and queryEndMonth != ''"> AND iccb.`receive_rent_date` <![CDATA[<=]]> last_day(#{queryEndMonth}) </if>
+        </where>
+        GROUP BY iccb.`customer_id`
+    </select>
+
+</mapper>

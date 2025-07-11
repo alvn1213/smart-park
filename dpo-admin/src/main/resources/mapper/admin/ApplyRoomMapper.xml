@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ApplyRoomMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ApplyRoom" id="ApplyRoomResult">
+        <result property="roomId"    column="room_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectApplyRoomVo">
+        SELECT id, room_id, user_id, create_by, create_time, update_by, update_time, version, delete_flag, tenant_id, park_id FROM dpo_apply_room
+    </sql>
+
+    <select id="selectApplyRoomList" parameterType="ApplyRoom" resultMap="ApplyRoomResult">
+        <include refid="selectApplyRoomVo"/>
+        <where>
+        </where>
+    </select>
+
+    <select id="selectApplyRoomById" parameterType="Long" resultMap="ApplyRoomResult">
+        <include refid="selectApplyRoomVo"/>
+        WHERE id = #{id}
+    </select>
+
+
+</mapper>

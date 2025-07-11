@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ParkMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.Park" id="ParkResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="area"    column="area"    />
+        <result property="lat"    column="lat"    />
+        <result property="lng"    column="lng"    />
+        <result property="roomNumbers"    column="room_numbers"    />
+        <result property="smallPic"    column="small_pic"    />
+        <result property="bannerImages"    column="banner_images" jdbcType="LONGVARCHAR"
+                javaType="java.util.ArrayList" typeHandler="cn.dtransfer.admin.handler.BannerImageHandler" />
+        <result property="briefIntro"    column="brief_intro"    />
+        <result property="lowRent"    column="low_rent"    />
+        <result property="highRent"    column="high_rent"    />
+        <result property="rentType"    column="rent_type"    />
+        <result property="cityName"    column="city_name"    />
+        <result property="city"    column="city" jdbcType="LONGVARCHAR"
+                javaType="java.util.ArrayList" typeHandler="cn.dtransfer.admin.handler.ListIntHandler" />
+        <result property="address"    column="address"    />
+        <result property="facilities"    column="facilities"    />
+        <result property="traffic"    column="traffic"    />
+        <result property="parkingFee"    column="parking_fee"    />
+        <result property="introduction"    column="introduction"    />
+        <result property="isMarketable"    column="is_marketable"    />
+        <result property="marketableTime"    column="marketable_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="tenantId" column="tenant_id"/>
+    </resultMap>
+
+    <sql id="selectPark">
+        SELECT
+            ip.id,
+            ip.name,
+            ip.area,
+            ip.lat,
+            ip.lng,
+            ip.room_numbers,
+            ip.small_pic,
+            ip.banner_images,
+            ip.brief_intro,
+            ip.low_rent,
+            ip.high_rent,
+            ip.rent_type,
+            ip.city_name,
+            ip.city,
+            ip.address,
+            ip.facilities,
+            ip.traffic,
+            ip.parking_fee,
+            ip.create_by,
+            ip.create_time,
+            ip.update_by,
+            ip.update_time,
+            ip.version,
+            ip.delete_flag,
+            ip.tenant_id,
+            ip.is_marketable,
+            ip.marketable_time
+        FROM
+            dpo_park AS ip
+    </sql>
+
+    <select id="selectParkList" parameterType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult">
+        <include refid="selectPark"/>
+        <where>
+            <if test="name != null  and name != ''"> and ip.name like concat('%', #{name}, '%')</if>
+            <if test="tenantId != null"> and ip.tenant_id = #{tenantId}</if>
+            and ip.delete_flag = 0
+        </where>
+    </select>
+
+    <select id="selectByDeptId" parameterType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult">
+        <include refid="selectPark"/>
+        <where>
+            <if test="deptId != null"> and ip.dept_id = #{deptId} </if>
+            AND ip.delete_flag = 0
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectAllParkList" parameterType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult">
+        SELECT * FROM(
+        <include refid="selectPark"/>
+        ) tmp_dpo_park
+    </select>
+
+</mapper>

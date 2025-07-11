@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContactsMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContacts" id="CustomerContactsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="remark"    column="remark"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+    </resultMap>
+
+    <sql id="selectCustomerContactsVo">
+        SELECT
+            icc.id,
+            icc.name,
+            icc.phone,
+            icc.remark,
+            icc.customer_id,
+            icc.create_by,
+            icc.create_time,
+            icc.update_by,
+            icc.update_time,
+            icc.version,
+            icc.delete_flag,
+            icc.tenant_id,
+            icc.park_id
+        FROM
+            dpo_customer_contacts AS icc
+    </sql>
+
+    <select id="selectCustomerContactsList" parameterType="cn.dtransfer.admin.domain.CustomerContacts" resultMap="CustomerContactsResult">
+        <include refid="selectCustomerContactsVo"/>
+        <where>
+            <if test="customerId != null"> AND icc.customer_id = #{customerId} </if>
+            <if test="deleteFlag != null"> AND icc.delete_flag = #{deleteFlag} </if>
+        </where>
+    </select>
+
+    <select id="selectCustomerContactsById" parameterType="Long" resultMap="CustomerContactsResult">
+        <include refid="selectCustomerContactsVo"/>
+        WHERE icc.id = #{id}
+    </select>
+
+
+
+</mapper>

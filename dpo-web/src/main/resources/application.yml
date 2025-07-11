@@ -1,0 +1,123 @@
+# 项目相关配置
+ruoyi:
+  # 名称
+  name: Digital Park Operation
+  # 版本
+  version: 2.0.0
+  # 版权年份
+  copyrightYear: 2024
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/XXXX/uploadPath，Linux配置 /home/XXXX/uploadPath）
+  profile: /Users/XXXX/techworkspace/dpo-project/dpo-storage
+  # 获取ip地址开关
+  addressEnabled: false
+  # 验证码类型 math 数字计算 char 字符验证
+  captchaType: math
+
+server:
+  port: 9227
+  undertow:
+    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
+    # 每块buffer的空间大小,越小的空间被利用越充分，不要设置太大，以免影响其他应用，合适即可
+    buffer-size: 1024
+    # 是否分配的直接内存(NIO直接分配的堆外内存)
+    direct-buffers: true
+# 日志配置
+logging:
+  level:
+    cn.dtransfer: debug
+    org.springframework: warn
+    #com.github.binarywang.demo.wx.miniapp: debug
+    #cn.binarywang.wx.miniapp: debug
+    #org.wf.jwtp: debug
+spring:
+  application:
+    name: DPO
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
+  devtools:
+    restart:
+      enabled: true
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      maxFileSize: 5MB  #单位必须大写MB或不写(即为B)
+      maxRequestSize: 10MB
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+aj:
+  captcha:
+    water-mark: dtransfer.cn
+    interference-options: 2
+
+# 阿里短信
+aliyun:
+  sms:
+    domain: dysmsapi.aliyuncs.com
+    accessKeyId: LTAITx3xxxx
+    accessKeySecret: y7xxxx
+    signName: XXXX产业园
+    templateCode: SMS_223586559
+
+# 编号生产
+sn:
+  repair:
+    prefix: 'yyyyMMdd'
+    maxLo: 100
+
+jwtp:
+  ## 0是 redisTokenStore ，1是 jdbcTokenStore ，默认是0
+  store-type: 0
+  ## 拦截路径，默认是/**
+  path: /**
+  ## 排除拦截路径，默认无
+  exclude-path: /admin/login/slide, /business/login/slide, /login/slide,/user/check_code,/captcha/check,/captcha/get,/system/sms/send,/user/register/submit,/wx/login,/wx/login,/user/check_mobile,/user/send_mobile,/user/search_customer,/user/check_code,/user/register,/password/send_mobile,/password/forgot,/auth/login,/social_user_login/login
+  ## 单个用户最大token数，默认-1不限制
+  max-token: 1
+  ## url自动对应权限方式，0 简易模式，1 RESTful模式
+  url-perm-type: 0
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: cn.dtransfer.system.domain,cn.dtransfer.quartz.domain,cn.dtransfer.generator.domain,cn.dtransfer.admin.domain
+  global-config:
+    db-config:
+      id-type: AUTO
+#      logic-delete-field: delete_flag  # 全局逻辑删除的实体字段名
+#      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+#      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+# 启信宝
+qixin:
+  testAppKey: xxxxx
+  testSecretKey: xxx
+  testUrl: xxxxx
+  appKey: xxxx
+  secretKey: xxx
+  url: xxxxx

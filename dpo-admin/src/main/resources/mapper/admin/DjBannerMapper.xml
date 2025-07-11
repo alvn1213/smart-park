@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.DjBannerMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.DjBanner" id="DjBannerResult">
+        <result property="id"    column="id"    />
+        <result property="bannerName"    column="banner_name"    />
+        <result property="bannerDesc"    column="banner_desc"    />
+        <result property="bannerImg"    column="banner_img"    />
+        <result property="url"    column="url"    />
+        <result property="hits"    column="hits"    />
+        <result property="isMarketable"    column="is_marketable"    />
+        <result property="marketableTime"    column="marketable_time"    />
+        <result property="isTop"    column="is_top"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+    </resultMap>
+
+    <sql id="selectDjBannerVo">
+        SELECT
+            ir.id,
+            ir.banner_name,
+            ir.banner_desc,
+            ir.banner_img,
+            ir.url,
+            ir.hits,
+            ir.is_marketable,
+            ir.marketable_time,
+            ir.is_top,
+            ir.version,
+            ir.delete_flag,
+            ir.create_by,
+            ir.create_time,
+            ir.update_by,
+            ir.update_time,
+            ir.tenant_id,
+            ir.park_id
+        FROM dpo_dj_banner ir
+    </sql>
+
+
+</mapper>

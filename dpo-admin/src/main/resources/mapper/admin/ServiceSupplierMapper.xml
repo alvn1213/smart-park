@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ServiceSupplierMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ServiceSupplier" id="ServiceSupplierResult">
+        <result property="id" column="id"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="supplierDesc" column="supplier_desc"/>
+        <result property="supplierImg" column="supplier_img"/>
+        <result property="supplierAddress" column="supplier_address"/>
+        <result property="supplierIndustry" column="supplier_industry"/>
+        <result property="supplierContent" column="supplier_content"/>
+        <result property="qualificationImg" column="qualification_img" jdbcType="LONGVARCHAR"
+                javaType="java.util.ArrayList" typeHandler="cn.dtransfer.admin.handler.BannerImageHandler"/>
+        <result property="serviceNum" column="service_num"/>
+        <result property="signNum" column="sign_num"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+    </resultMap>
+
+    <sql id="selectIcsServiceSupplierVo">
+        SELECT id,
+               supplier_name,
+               supplier_desc,
+               supplier_img,
+               supplier_address,
+               supplier_industry,
+               supplier_content,
+               qualification_img,
+               service_num,
+               sign_num,
+               version,
+               delete_flag,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               tenant_id,
+               park_id
+        FROM dpo_service_supplier
+    </sql>
+
+    <select id="selectServiceSupplierById" parameterType="Long" resultMap="ServiceSupplierResult">
+        <include refid="selectIcsServiceSupplierVo"/>
+        WHERE id = #{id}
+    </select>
+
+</mapper>

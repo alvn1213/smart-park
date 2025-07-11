@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ServiceManageMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ServiceManage" id="ServiceManageResult">
+        <result property="id"    column="id"    />
+        <result property="serviceName"    column="service_name"    />
+        <result property="serviceDesc"    column="service_desc"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="menuId"    column="menu_id"    />
+        <result property="price"    column="price"    />
+        <result property="priceUnit"    column="price_unit"    />
+        <result property="contract"    column="contract"    />
+        <result property="contractTimeStart"    column="contract_time_start"    />
+        <result property="contractTimeEnd"    column="contract_time_end"    />
+        <result property="isWorkDay"    column="is_work_day"    />
+        <result property="serviceContent"    column="service_content"    />
+        <result property="agreementStatus"    column="agreement_status"    />
+        <result property="agreementName"    column="agreement_name"    />
+        <result property="agreementContent"    column="agreement_content"    />
+        <result property="levelOneMenu"    column="level_one_menu"    />
+        <result property="levelTwoMenu"    column="level_two_menu"    />
+        <result property="isMarketable"    column="is_marketable"    />
+        <result property="marketableTime"    column="marketable_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+        <association property="serviceSupplier" javaType="cn.dtransfer.admin.domain.ServiceSupplier" resultMap="ServiceSupplierResult" />
+        <association property="serviceMenu" javaType="cn.dtransfer.admin.domain.ServiceMenu" resultMap="ServiceMenuResult" />
+
+    </resultMap>
+
+    <resultMap type="cn.dtransfer.admin.domain.ServiceMenu" id="ServiceMenuResult">
+        <result property="id"    column="menu_id"    />
+        <result property="menuName"    column="menu_name"    />
+    </resultMap>
+
+    <resultMap type="cn.dtransfer.admin.domain.ServiceSupplier" id="ServiceSupplierResult">
+        <result property="id"    column="supplier_id"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="supplierImg" column="supplier_img"/>
+        <result property="supplierAddress" column="supplier_address"/>
+    </resultMap>
+
+    <sql id="selectServiceManageVo">
+        SELECT
+            ism.id,
+            ism.service_name,
+            ism.service_desc,
+            ism.supplier_id,
+            ism.menu_id,
+            ism.price,
+            ism.price_unit,
+            ism.contract,
+            ism.contract_time_start,
+            ism.contract_time_end,
+            ism.is_work_day,
+            ism.service_content,
+            ism.agreement_status,
+            ism.agreement_name,
+            ism.agreement_content,
+            ism.level_one_menu,
+            ism.level_two_menu,
+            ism.is_marketable,
+            ism.marketable_time,
+            ism.tenant_id,
+            ism.create_by,
+            ism.create_time,
+            ism.update_by,
+            ism.update_time,
+            ismu.menu_name,
+            iss.supplier_name,
+            iss.supplier_img,
+            iss.supplier_address,
+            ism.park_id
+        FROM
+            dpo_service_manage AS ism
+                LEFT JOIN dpo_service_menu ismu ON ism.menu_id = ismu.id
+                LEFT JOIN dpo_service_supplier iss ON ism.supplier_id = iss.id
+    </sql>
+
+    <select id="selectServiceManageList" parameterType="cn.dtransfer.admin.domain.ServiceManage" resultMap="ServiceManageResult">
+        <include refid="selectServiceManageVo"/>
+        <where>
+            <if test="serviceName != null  and serviceName != ''"> AND ism.service_name LIKE CONCAT('%', #{serviceName}, '%')</if>
+            <if test="supplierName != null  and supplierName != ''"> AND iss.supplier_name LIKE CONCAT('%', #{supplierName}, '%')</if>
+            <if test="agreementName != null  and agreementName != ''"> AND ism.agreement_name LIKE CONCAT('%', #{agreementName}, '%')</if>
+            <if test="menuId != null"> AND ism.menu_id = #{menuId}</if>
+            <if test="tenantId != null"> AND ism.tenant_id = #{tenantId}</if>
+            <if test="parkId != null"> AND ism.park_id = #{parkId}</if>
+            <if test="isMarketable != null"> AND ism.is_marketable = #{isMarketable}</if>
+            <if test="createBy != null  and createBy != ''"> AND ism.create_by = #{createBy}</if>
+            AND ism.delete_flag = 0
+        </where>
+        ORDER BY ism.create_time DESC
+    </select>
+
+    <select id="selectServiceManageById" parameterType="Long" resultMap="ServiceManageResult">
+        <include refid="selectServiceManageVo"/>
+        where ism.id = #{id}
+    </select>
+
+</mapper>

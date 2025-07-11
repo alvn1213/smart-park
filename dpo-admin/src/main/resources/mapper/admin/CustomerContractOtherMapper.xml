@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContractOtherMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractOther" id="CustomerContractOtherResult">
+        <result property="id"    column="id"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="expenseSettingsId"    column="expense_settings_id"    />
+        <result property="otherFee"    column="other_fee"    />
+        <result property="expenseType"    column="expense_type"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+    </resultMap>
+
+    <sql id="selectCustomerContractOtherVo">
+        SELECT id, contract_id, expense_settings_id, other_fee, expense_type, start_date, end_date, remark, create_by, create_time, update_by, update_time, version, delete_flag, tenant_id, park_id FROM dpo_customer_contract_other
+    </sql>
+
+
+
+</mapper>

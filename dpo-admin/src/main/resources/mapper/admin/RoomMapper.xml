@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.RoomMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.Room" id="RoomResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="rent" column="rent"/>
+        <result property="rentType" column="rent_type"/>
+        <result property="managementFee" column="management_fee"/>
+        <result property="managementFeeType" column="management_fee_type"/>
+        <result property="area" column="area"/>
+        <result property="rentArea" column="rent_area"/>
+        <result property="commonArea" column="common_area"/>
+        <result property="canBeDivided" column="can_be_divided"/>
+        <result property="layout" column="layout" />
+        <result property="status" column="status" />
+        <result property="updateStatusTime" column="update_status_time"/>
+        <result property="floorHeight" column="floor_height"/>
+        <result property="availableFrom" column="available_from"/>
+        <result property="decorationType" column="decoration_type"
+                />
+        <result property="bonus" column="bonus"/>
+        <result property="bannerImages" column="banner_images" jdbcType="LONGVARCHAR"
+                javaType="java.util.ArrayList" typeHandler="cn.dtransfer.admin.handler.BannerImageHandler"/>
+        <result property="smallPic" column="small_pic"/>
+        <result property="briefIntro" column="brief_intro"/>
+        <result property="isMarketable" column="is_marketable"/>
+        <result property="marketableTime" column="marketable_time"/>
+        <result property="buildingId" column="building_id"/>
+        <result property="buildingDetailId" column="building_detail_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+        <association property="park" javaType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult"/>
+        <association property="building" javaType="cn.dtransfer.admin.domain.Building" resultMap="BuildingResult"/>
+        <association property="buildingDetail" javaType="cn.dtransfer.admin.domain.BuildingDetail"
+                     resultMap="BuildingDetailResult"/>
+    </resultMap>
+
+    <!-- 园区 -->
+    <resultMap type="cn.dtransfer.admin.domain.Park" id="ParkResult">
+        <result property="id" column="parkId"/>
+        <result property="name" column="parkName"/>
+    </resultMap>
+
+
+    <!-- 楼宇 -->
+    <resultMap type="cn.dtransfer.admin.domain.Building" id="BuildingResult">
+        <result property="id" column="building_id"/>
+        <result property="buildingName" column="building_name"/>
+    </resultMap>
+
+    <!-- 楼层 -->
+    <resultMap type="cn.dtransfer.admin.domain.BuildingDetail" id="BuildingDetailResult">
+        <result property="id" column="building_detail_id"/>
+        <result property="floorName" column="floor_name"/>
+    </resultMap>
+
+    <sql id="selectRoomVo">
+        SELECT ir.id,
+               ir.name,
+               ir.rent,
+               ir.rent_type,
+               ir.management_fee,
+               ir.management_fee_type,
+               ir.area,
+               ir.rent_area,
+               ir.common_area,
+               ir.can_be_divided,
+               ir.layout,
+               ir.status,
+               ir.update_status_time,
+               ir.floor_height,
+               ir.available_from,
+               ir.decoration_type,
+               ir.bonus,
+               ir.banner_images,
+               ir.small_pic,
+               ir.brief_intro,
+               ir.is_marketable,
+               ir.marketable_time,
+               ir.create_by,
+               ir.create_time,
+               ir.update_by,
+               ir.update_time,
+               ir.building_id,
+               ir.building_detail_id,
+               ir.park_id,
+               ir.tenant_id,
+               ip.name,
+               ip.id            AS parkId,
+               ip.name          AS parkName,
+               ib.id            AS building_id,
+               ib.building_name AS building_name,
+               ibd.id           AS building_detail_id,
+               ibd.floor_name   AS floor_name
+        FROM  dpo_room AS ir
+                 LEFT JOIN dpo_building AS ib ON ib.id = ir.building_id
+                 LEFT JOIN dpo_building_detail AS ibd ON ibd.id = ir.building_detail_id
+                 LEFT JOIN dpo_park AS ip ON ip.id = ir.`park_id`
+    </sql>
+
+    <select id="selectRoomList" parameterType="cn.dtransfer.admin.domain.Room" resultMap="RoomResult">
+        <include refid="selectRoomVo"/>
+        <where>
+        <if test="name != null  and name != ''">AND ir.name LIKE concat('%', #{name}, '%')</if>
+        <if test="buildingName!= null  and buildingName != ''">AND ib.building_name LIKE concat('%', #{buildingName},
+            '%')
+        </if>
+        <if test="status != null">AND ir.status = #{status.value}</if>
+        <if test="isMarketable != null">AND ir.is_marketable = #{isMarketable}</if>
+        <if test="deleteFlag != null"> and ir.delete_flag = #{deleteFlag} </if>
+        </where>
+        ORDER BY ir.create_time DESC
+    </select>
+
+    <select id="selectByRoomId" parameterType="Long" resultMap="RoomResult">
+        <include refid="selectRoomVo"/>
+        WHERE ir.id = #{id}
+    </select>
+</mapper>

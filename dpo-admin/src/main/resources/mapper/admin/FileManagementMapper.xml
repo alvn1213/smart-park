@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.FileManagementMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.FileManagement" id="FileManagementResult">
+        <result property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="url" column="url"/>
+        <result property="fileRemarks" column="file_remarks"/>
+        <result property="parkId" column="park_id"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+    </resultMap>
+
+    <sql id="selectFileManagementVo">
+        SELECT id,
+               file_name,
+               url,
+               file_remarks,
+               park_id,
+               version,
+               delete_flag,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               tenant_id
+        FROM dpo_file_management
+    </sql>
+
+    <select id="selectFileManagementList" parameterType="FileManagement" resultMap="FileManagementResult">
+        <include refid="selectFileManagementVo"/>
+        <where>
+        </where>
+    </select>
+
+    <select id="selectFileManagementById" parameterType="Long" resultMap="FileManagementResult">
+        <include refid="selectFileManagementVo"/>
+        WHERE id = #{id}
+    </select>
+</mapper>

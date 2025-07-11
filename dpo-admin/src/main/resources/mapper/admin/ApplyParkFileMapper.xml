@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ApplyParkFileMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ApplyParkFile" id="ApplyParkFilesResult">
+        <result property="id"    column="id"    />
+        <result property="applyParkId"    column="apply_park_id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="filePath"    column="file_path"    />
+    </resultMap>
+
+    <sql id="selectApplyParkFilesVo">
+        SELECT apply_park_id, file_name, file_path FROM dpo_apply_park_file
+    </sql>
+
+
+    <delete id="deleteByApplyParkId" parameterType="Long">
+        DELETE FROM dpo_apply_park_file WHERE apply_park_id = #{applyParkId}
+    </delete>
+
+
+
+</mapper>

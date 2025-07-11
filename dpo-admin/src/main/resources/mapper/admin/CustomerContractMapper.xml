@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContractMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContract" id="CustomerContractResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="name"    column="name"    />
+        <result property="sn"    column="sn"    />
+        <result property="pmSn"    column="pm_sn"    />
+        <result property="manageSn"    column="manage_sn"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+        <result property="remark"    column="remark"    />
+        <result property="needStartDate"    column="need_start_date"    />
+        <result property="needEndDate"    column="need_end_date"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="receiveRentDay"    column="receive_rent_day"    />
+        <result property="totalMonths"    column="total_months"    />
+        <result property="signDate"    column="sign_date"    />
+        <result property="lessorType"    column="lessor_type"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerType"    column="customer_type"    />
+        <result property="sector"    column="sector"    />
+        <result property="email"    column="email"    />
+        <result property="creditNo"    column="credit_no"    />
+        <result property="operName"    column="oper_name"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="address"    column="address"    />
+        <result property="intentionMoney"    column="intention_money"    />
+        <result property="managementFee"    column="management_fee"    />
+        <result property="managementFeeUnit"    column="management_fee_unit"    />
+        <result property="managementFeeIncreaseDay"    column="management_fee_increase_day"    />
+        <result property="managementFeeIncreaseMonth"    column="management_fee_increase_month"    />
+        <result property="rentPrice"    column="rent_price"    />
+        <result property="rentPriceUnit"    column="rent_price_unit"    />
+        <result property="rentIncreaseDay"    column="rent_increase_day"    />
+        <result property="rentIncreaseMonth"    column="rent_increase_month"    />
+        <result property="rentIncreaseWay"    column="rent_increase_way"    />
+        <result property="paymentPeriod"    column="payment_period"    />
+        <result property="deposit"    column="deposit"    />
+        <result property="depositPeriod"    column="deposit_period"    />
+        <result property="depositOverduePercent"    column="deposit_overdue_percent"    />
+        <result property="rentOverduePercent"    column="rent_overdue_percent"    />
+        <result property="postCode"    column="post_code"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="parkId"    />
+        <collection property="customerContractRooms" ofType="cn.dtransfer.admin.domain.Room" resultMap="RoomResult" />
+        <collection property="customerContractBills" ofType="cn.dtransfer.admin.domain.CustomerContractBill" resultMap="CustomerContractBillResult" />
+        <collection property="customerContractOthers" ofType="cn.dtransfer.admin.domain.CustomerContractOther" resultMap="CustomerContractOtherResult"/>
+    </resultMap>
+
+    <!-- 房间 -->
+    <resultMap type="cn.dtransfer.admin.domain.Room" id="RoomResult">
+        <result property="id"    column="room_id"    />
+        <result property="name"    column="room_name"    />
+        <result property="rentType"    column="rent_type"    />
+        <result property="area"    column="area"    />
+        <result property="rentArea"    column="rent_area"    />
+        <result property="commonArea"    column="common_area"    />
+        <result property="buildingId" column="building_id"/>
+        <result property="buildingDetailId" column="building_detail_id"/>
+        <association property="park" javaType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult" />
+        <association property="building" javaType="cn.dtransfer.admin.domain.Building" resultMap="BuildingResult" />
+        <association property="buildingDetail" javaType="cn.dtransfer.admin.domain.BuildingDetail" resultMap="BuildingDetailResult" />
+    </resultMap>
+
+    <!-- 园区 -->
+    <resultMap type="cn.dtransfer.admin.domain.Park" id="ParkResult">
+        <result property="id"    column="park_id"    />
+        <result property="name"    column="park_name"    />
+    </resultMap>
+
+
+    <!-- 楼宇 -->
+    <resultMap type="cn.dtransfer.admin.domain.Building" id="BuildingResult">
+        <result property="id"    column="building_id"    />
+        <result property="buildingName"    column="building_name"    />
+    </resultMap>
+
+    <!-- 楼宇 -->
+    <resultMap type="cn.dtransfer.admin.domain.BuildingDetail" id="BuildingDetailResult">
+        <result property="id"    column="building_detail_id"    />
+        <result property="floorName"    column="floor_name"    />
+    </resultMap>
+
+
+    <!-- 合同关联账单 -->
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractBill" id="CustomerContractBillResult">
+        <result property="name" column="bill_name"/>
+        <result property="sn" column="bill_sn"/>
+        <result property="contractId"    column="contract_id"    />
+        <result property="id"    column="bill_id"    />
+        <result property="rent"    column="rent"    />
+        <result property="otherFee"    column="other_fee"    />
+        <result property="managementTotalFee" column="management_total_fee"/>
+        <result property="deposit"    column="deposit"    />
+        <result property="rentOverdue"    column="rent_overdue"    />
+        <result property="depositOverdue"    column="deposit_overdue"    />
+        <result property="receiveRentDate"    column="receive_rent_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="billDate"    column="bill_date"    />
+        <result property="billStartDate"    column="bill_start_date"    />
+        <result property="billEndDate"    column="bill_end_date"    />
+        <result property="status"    column="bill_status"    />
+        <result property="type"      column="type"/>
+        <result property="billType"  column="bill_type"/>
+        <result property="remark"   column="bill_remark"/>
+        <collection property="customerContractExpenses" ofType="cn.dtransfer.admin.domain.CustomerContractExpenses" resultMap="CustomerContractExpensesResult" />
+    </resultMap>
+
+
+    <!-- 账单费项（水、电费和其他费用） -->
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractExpenses" id="CustomerContractExpensesResult">
+        <result property="billId"    column="bill_id"    />
+        <result property="expenseName"    column="expense_name"/>
+        <result property="amount"    column="amount"    />
+        <result property="expenseType"    column="expense_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="expense_remark"    />
+    </resultMap>
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractOther" id="CustomerContractOtherResult">
+        <result property="id"    column="contract_other_id"    />
+        <result property="expenseSettingsId"    column="expense_settings_id"    />
+        <result property="otherFee"    column="contract_other_fee"    />
+        <result property="expenseType"    column="expense_type"    />
+        <result property="startDate"    column="other_start_date"    />
+        <result property="endDate"    column="other_end_date"    />
+        <result property="remark"    column="other_remark"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+        <association property="expenseSettings" javaType="cn.dtransfer.admin.domain.ExpenseSettings" resultMap="ExpenseSettingsResult"/>
+    </resultMap>
+
+    <resultMap type="cn.dtransfer.admin.domain.ExpenseSettings" id="ExpenseSettingsResult">
+        <result property="id" column="expense_settings_id"/>
+        <result property="name" column="expense_settings_name"/>
+        <result property="type" column="expense_settings_type"/>
+        <result property="unitsCode" column="units_code"/>
+        <result property="taxFee" column="tax_fee"/>
+    </resultMap>
+
+
+
+    <sql id="selectCustomerContractVo">
+        SELECT
+            icc.id,
+            icc.customer_id,
+            icc.name,
+            icc.sn,
+            icc.pm_sn,
+            icc.manage_sn,
+            icc.status,
+            icc.type,
+            icc.remark,
+            icc.need_start_date,
+            icc.need_end_date,
+            icc.start_date,
+            icc.end_date,
+            icc.receive_rent_day,
+            icc.total_months,
+            icc.sign_date,
+            icc.lessor_type,
+            icc.customer_name,
+            icc.customer_type,
+            icc.sector,
+            icc.email,
+            icc.credit_no,
+            icc.oper_name,
+            icc.channel_name,
+            icc.phone,
+            icc.address,
+            icc.intention_money,
+            icc.management_fee,
+            icc.management_fee_unit,
+            icc.management_fee_increase_day,
+            icc.management_fee_increase_month,
+            icc.rent_price,
+            icc.rent_price_unit,
+            icc.rent_increase_day,
+            icc.rent_increase_month,
+            icc.rent_increase_way,
+            icc.payment_period,
+            icc.deposit,
+            icc.deposit_period,
+            icc.deposit_overdue_percent,
+            icc.rent_overdue_percent,
+            icc.post_code,
+            icc.create_by,
+            icc.create_time,
+            icc.update_by,
+            icc.update_time,
+            icc.version,
+            icc.delete_flag,
+            icc.tenant_id,
+            icc.park_id AS parkId
+        FROM
+            dpo_customer_contract AS icc
+                LEFT JOIN dpo_park AS ip ON icc.`park_id` = ip.`id`
+    </sql>
+
+    <select id="selectCustomerContractList" parameterType="cn.dtransfer.admin.domain.CustomerContract" resultMap="CustomerContractResult">
+        <include refid="selectCustomerContractVo"/>
+        <where>
+            <if test="name != null  and name != ''"> AND icc.name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="customerName != null  and customerName != ''"> AND icc.customer_name LIKE CONCAT('%', #{customerName}, '%')</if>
+            <if test="sn != null  and sn != ''"> AND icc.sn = #{sn} </if>
+            <if test="type != null"> AND icc.type = #{type.value} </if>
+            <if test="status != null"> AND icc.status = #{status.value} </if>
+            <if test="customerId != null  and customerId != ''"> AND icc.customer_id = #{customerId} </if>
+            AND icc.delete_flag = 0
+        </where>
+        ORDER BY icc.id DESC
+    </select>
+
+    <select id="selectCustomerContractById" parameterType="Long" resultMap="CustomerContractResult">
+        SELECT
+            icc.id,
+            icc.customer_id,
+            icc.name,
+            icc.sn,
+            icc.pm_sn,
+            icc.manage_sn,
+            icc.status,
+            icc.type,
+            icc.need_start_date,
+            icc.need_end_date,
+            icc.intention_money,
+            icc.start_date,
+            icc.end_date,
+            icc.total_months,
+            icc.sign_date,
+            icc.lessor_type,
+            icc.customer_name,
+            icc.customer_type,
+            icc.channel_name,
+            icc.sector,
+            icc.email,
+            icc.credit_no,
+            icc.oper_name,
+            icc.phone,
+            icc.address,
+            icc.management_fee,
+            icc.management_fee_unit,
+            icc.management_fee_increase_day,
+            icc.management_fee_increase_month,
+            icc.rent_price,
+            icc.rent_price_unit,
+            icc.rent_increase_day,
+            icc.rent_increase_month,
+            icc.rent_increase_way,
+            icc.payment_period,
+            icc.post_code,
+            icc.version,
+            icc.create_by,
+            icc.update_by,
+            icc.create_time,
+            icc.update_time,
+            icc.remark,
+            icc.deposit,
+            icc.deposit_period,
+            icc.deposit_overdue_percent,
+            icc.rent_overdue_percent,
+            icc.receive_rent_day,
+            icc.tenant_id,
+            icc.park_id,
+            iccb.name AS bill_name,
+            iccb.`id` AS bill_id,
+            iccb.sn AS bill_sn,
+            iccb.`bill_date`,
+            iccb.`bill_start_date`,
+            iccb.`bill_end_date`,
+            iccb.bill_type,
+            iccb.`deposit`,
+            iccb.`deposit_overdue`,
+            iccb.`rent`,
+            iccb.`other_fee`,
+            iccb.`management_total_fee`,
+            iccb.`rent_overdue`,
+            iccb.`status` AS bill_status,
+            iccb.`receive_rent_date`,
+            iccb.`remark` AS bill_remark,
+            ir.`building_id`,
+            ir.`building_detail_id`,
+            ir.`id` AS room_id,
+            ir.`name` AS room_name,
+            ir.`area`,
+            ir.`rent_area`,
+            ir.`common_area`,
+            ir.`rent_type`,
+            ib.`building_name`,
+            ibd.`floor_name`,
+            ip.`name` AS park_name,
+            icco.id AS contract_other_id,
+            icco.other_fee AS contract_other_fee,
+            icco.remark AS other_remark,
+            icco.start_date AS other_start_date,
+            icco.end_date AS other_end_date,
+            ies.id AS expense_settings_id,
+            ies.name AS expense_settings_name,
+            ies.type AS expense_settings_type,
+            ies.units_code,
+            ies.tax_fee
+        FROM
+            dpo_customer_contract icc
+                LEFT JOIN dpo_customer_contract_room iccr
+                          ON icc.`id` = iccr.`contract_id`
+                LEFT JOIN `dpo_room` ir
+                          ON iccr.`room_id` = ir.`id`
+                LEFT JOIN `dpo_building` ib
+                          ON ib.`id` = ir.`building_id`
+                LEFT JOIN `dpo_building_detail` ibd
+                          ON ibd.`id` = ir.`building_detail_id`
+                LEFT JOIN dpo_park ip
+                          ON ip.`id` = icc.`park_id`
+                LEFT JOIN `dpo_customer_contract_bill` iccb
+                          ON (icc.`id` = iccb.`contract_id` AND iccb.delete_flag = 0)
+                LEFT JOIN dpo_customer_contract_other icco
+                          ON icco.contract_id = icc.id
+                LEFT JOIN dpo_expense_settings ies
+                          ON ies.id = icco.expense_settings_id
+        WHERE icc.id = #{id}
+    </select>
+
+    <!-- 修改合同状态 -->
+    <update id="updateContractsStatus">
+        update dpo_customer_contract set status = #{status.value}, update_time = CURRENT_TIMESTAMP where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

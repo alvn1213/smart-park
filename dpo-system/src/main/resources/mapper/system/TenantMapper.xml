@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.system.mapper.TenantMapper">
+
+    <resultMap type="cn.dtransfer.system.domain.Tenant" id="TenantResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+
+    <resultMap type="cn.dtransfer.system.domain.User" id="UserResult">
+        <id     property="id"       	column="uid"      		/>
+        <result property="username"     column="username"   	/>
+        <result property="mobile"     column="mobile"   	/>
+        <result property="avatar"       column="avatar"       	/>
+        <result property="tenantId"       column="tenant_id"    />
+    </resultMap>
+
+    <sql id="selectTenantVo">
+        SELECT
+            t.id,
+            t.name,
+            t.version,
+            t.delete_flag,
+            t.create_by,
+            t.create_time,
+            t.update_by,
+            t.update_time
+        FROM
+            sys_tenant t
+    </sql>
+
+    <select id="selectTenantList" parameterType="cn.dtransfer.system.domain.Tenant" resultMap="TenantResult">
+        <include refid="selectTenantVo"/>
+        <where>
+            <if test="name != null  and name != ''"> AND t.name LIKE CONCAT('%', #{name}, '%')</if>
+            AND t.delete_flag = false
+        </where>
+    </select>
+
+    <select id="selectTenantById" parameterType="Long" resultMap="TenantResult">
+        <include refid="selectTenantVo"/>
+        WHERE t.id = #{id}
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.RepairLogMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.RepairLog" id="RepairLogResult">
+        <result property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="detail" column="detail"/>
+        <result property="repairId" column="repair_id"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+    </resultMap>
+
+    <sql id="selectRepairLogVo">
+        SELECT id,
+               type,
+               detail,
+               repair_id,
+               version,
+               delete_flag,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               tenant_id
+        FROM dpo_repair_log
+    </sql>
+
+    <select id="selectRepairLogList" parameterType="RepairLog" resultMap="RepairLogResult">
+        <include refid="selectRepairLogVo"/>
+        <where>
+            <if test="repairId != null">AND repair_id = #{repairId}</if>
+        </where>
+    </select>
+
+
+</mapper>

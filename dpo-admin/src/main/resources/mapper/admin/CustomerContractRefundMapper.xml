@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContractRefundMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractRefund" id="CustomerContractRefundResult">
+        <result property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="contractId" column="contract_id"/>
+        <result property="sn" column="refundSn"/>
+        <result property="refundDate" column="refund_date"/>
+        <result property="receiveFee" column="receive_fee"/>
+        <result property="refundFee" column="refund_fee"/>
+        <result property="totalFee" column="total_fee"/>
+        <result property="status" column="RefundStatus"/>
+        <result property="refundReason" column="refund_reason"
+                />
+        <result property="remark" column="remark"/>
+        <result property="archiveImageList" column="archive_image_list" jdbcType="LONGVARCHAR"
+                javaType="java.util.ArrayList" typeHandler="cn.dtransfer.admin.handler.BannerImageHandler"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+        <association property="customerContract" javaType="cn.dtransfer.admin.domain.CustomerContract"
+                     resultMap="CustomerContractResult"/>
+        <collection property="customerContractRefundRooms" ofType="cn.dtransfer.admin.domain.CustomerContractRoom"
+                    resultMap="CustomerContractRoomResult"/>
+    </resultMap>
+
+    <!-- 客户合同对象 -->
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContract" id="CustomerContractResult">
+        <result property="customerName" column="customer_name"/>
+        <result property="id" column="conId"/>
+        <result property="status" column="status" />
+        <result property="sn" column="sn"/>
+        <result property="manageSn" column="manage_sn"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+
+    <!-- 合同房间关联关系 -->
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractRoom" id="CustomerContractRoomResult">
+        <result property="contractId" column="contract_id"/>
+        <result property="roomId" column="room_id"/>
+    </resultMap>
+
+    <!-- 房间 -->
+    <resultMap type="cn.dtransfer.admin.domain.Room" id="RoomResult">
+        <result property="id" column="room_id"/>
+        <result property="name" column="room_name"/>
+        <result property="rent" column="rent"/>
+        <result property="rentType" column="rent_type"/>
+        <result property="area" column="area"/>
+        <result property="rentArea" column="rent_area"/>
+        <result property="commonArea" column="common_area"/>
+        <result property="buildingId" column="building_id"/>
+        <result property="buildingDetailId" column="building_detail_id"/>
+        <association property="park" javaType="cn.dtransfer.admin.domain.Park" resultMap="ParkResult"/>
+        <association property="building" javaType="cn.dtransfer.admin.domain.Building" resultMap="BuildingResult"/>
+        <association property="buildingDetail" javaType="cn.dtransfer.admin.domain.BuildingDetail"
+                     resultMap="BuildingDetailResult"/>
+    </resultMap>
+
+    <!-- 园区 -->
+    <resultMap type="cn.dtransfer.admin.domain.Park" id="ParkResult">
+        <result property="id" column="park_id"/>
+        <result property="name" column="park_name"/>
+    </resultMap>
+
+
+    <!-- 楼宇 -->
+    <resultMap type="cn.dtransfer.admin.domain.Building" id="BuildingResult">
+        <result property="id" column="building_id"/>
+        <result property="buildingName" column="building_name"/>
+    </resultMap>
+
+    <!-- 楼宇 -->
+    <resultMap type="cn.dtransfer.admin.domain.BuildingDetail" id="BuildingDetailResult">
+        <result property="id" column="building_detail_id"/>
+        <result property="floorName" column="floor_name"/>
+    </resultMap>
+
+    <sql id="selectContractRefund">
+        SELECT f.id,
+               f.customer_id,
+               f.contract_id,
+               f.sn     AS refundSn,
+               f.refund_date,
+               f.receive_Fee,
+               f.refund_Fee,
+               f.total_Fee,
+               f.status AS RefundStatus,
+               f.refund_reason,
+               f.remark,
+               f.archive_image_list,
+               f.version,
+               f.delete_flag,
+               f.tenant_id,
+               f.park_id,
+               f.create_by,
+               f.update_by,
+               f.create_time,
+               f.update_time,
+               con.sn,
+               con.id AS conId,
+               con.customer_name,
+               con.manage_sn,
+               con.name
+        FROM dpo_customer_contract_refund f
+                 LEFT JOIN dpo_customer_contract con ON f.contract_id = con.id
+                 LEFT JOIN dpo_park AS ip ON f.park_id = ip.id
+    </sql>
+
+    <select id="selectContractRefundList" parameterType="CustomerContractRefund"
+            resultMap="CustomerContractRefundResult">
+        <include refid="selectContractRefund"/>
+        <where>
+            <if test="status != null">AND f.status = #{status.value}</if>
+            <if test="searchValue != null  and searchValue != ''">
+                AND con.name LIKE CONCAT('%', #{searchValue}, '%')
+                OR con.customer_name LIKE CONCAT('%', #{searchValue}, '%')
+                OR f.sn LIKE CONCAT('%', #{searchValue}, '%')
+            </if>
+            AND f.delete_flag = 0
+        </where>
+    </select>
+
+
+    <select id="selectCustomerContractRefundById" parameterType="Long" resultMap="CustomerContractRefundResult">
+        SELECT f.id,
+               f.customer_id,
+               f.contract_id,
+               f.sn     AS refundSn,
+               f.refund_date,
+               f.receive_Fee,
+               f.refund_Fee,
+               f.total_Fee,
+               f.status AS RefundStatus,
+               f.refund_reason,
+               f.remark,
+               f.archive_image_list,
+               f.version,
+               f.delete_flag,
+               f.tenant_id,
+               f.park_id,
+               f.create_by,
+               f.update_by,
+               f.create_time,
+               f.update_time,
+               con.sn,
+               con.id    AS conId,
+               con.customer_name,
+               con.manage_sn,
+               con.name,
+               ir.id     AS room_id,
+               ir.`name` AS room_name,
+               ir.`area`,
+               ir.`rent_area`,
+               ir.`common_area`,
+               ib.`building_name`,
+               ibd.`floor_name`,
+               ip.`name` AS park_name
+        FROM dpo_customer_contract_refund f
+                 LEFT JOIN dpo_customer_contract con
+                           ON f.contract_id = con.id
+                 LEFT JOIN dpo_customer_contract_refund_room r
+                           ON f.id = r.refund_id
+                 LEFT JOIN dpo_room ir
+                           ON r.`room_id` = ir.`id`
+                 LEFT JOIN dpo_building ib
+                           ON ib.`id` = ir.`building_id`
+                 LEFT JOIN dpo_building_detail ibd
+                           ON ibd.`id` = ir.`building_detail_id`
+                 LEFT JOIN dpo_park AS ip
+                           ON ip.id = f.`park_id`
+        WHERE f.id = #{id}
+    </select>
+
+</mapper>

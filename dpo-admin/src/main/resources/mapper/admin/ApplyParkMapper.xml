@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ApplyParkMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ApplyPark" id="ApplyParkResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="isRegister"    column="is_register"    />
+        <result property="operName"    column="oper_name"    />
+        <result property="registCapi"    column="regist_capi"    />
+        <result property="econKind"    column="econ_kind"    />
+        <result property="nation"    column="nation"    />
+        <result property="userName"    column="user_name"    />
+        <result property="status"    column="status"    />
+        <result property="position"    column="position"    />
+        <result property="phone"    column="phone"    />
+        <result property="qq"    column="qq"    />
+        <result property="email"    column="email"    />
+        <result property="site"    column="site"    />
+        <result property="persons"    column="persons"    />
+        <result property="isCompliance"    column="is_compliance"    />
+        <result property="preYearValue"    column="pre_year_value"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="applyArea"    column="apply_area"    />
+        <result property="profile"    column="profile"    />
+        <result property="scope"    column="scope"    />
+        <result property="advantage"    column="advantage"    />
+        <result property="reason"    column="reason"    />
+        <result property="memo"    column="memo"    />
+        <result property="createUserId"    column="create_user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+        <result property="remark"    column="remark"    />
+        <collection property="applyParkFileList" ofType="cn.dtransfer.admin.domain.ApplyParkFile" resultMap="ApplyParkFilesResult"/>
+    </resultMap>
+
+    <resultMap id="ApplyParkFilesResult" type="cn.dtransfer.admin.domain.ApplyParkFile">
+        <result property="id"       column="file_id"/>
+        <result property="applyParkId" column="apply_park_id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="filePath" column="file_path"/>
+    </resultMap>
+
+    <sql id="selectApplyParkVo">
+        SELECT
+            iap.id,
+            iap.name,
+            iap.type,
+            iap.is_register,
+            iap.oper_name,
+            iap.regist_capi,
+            iap.econ_kind,
+            iap.nation,
+            iap.user_name,
+            iap.status,
+            iap.position,
+            iap.phone,
+            iap.qq,
+            iap.email,
+            iap.site,
+            iap.persons,
+            iap.is_compliance,
+            iap.pre_year_value,
+            iap.start_date,
+            iap.end_date,
+            iap.apply_area,
+            iap.profile,
+            iap.scope,
+            iap.advantage,
+            iap.reason,
+            iap.memo,
+            iap.create_user_id,
+            iap.create_by,
+            iap.create_time,
+            iap.update_by,
+            iap.update_time,
+            iap.version,
+            iap.delete_flag,
+            iap.tenant_id,
+            iap.park_id,
+            iap.remark,
+            iapf.id AS file_id,
+            iapf.file_name,
+            iapf.file_path
+        FROM
+            dpo_apply_park iap
+                LEFT JOIN dpo_apply_park_file iapf
+                          ON iap.id = iapf.apply_park_id
+    </sql>
+
+    <sql id="selectApplyParkVoList">
+        SELECT
+            iap.id,
+            iap.name,
+            iap.type,
+            iap.is_register,
+            iap.oper_name,
+            iap.regist_capi,
+            iap.econ_kind,
+            iap.nation,
+            iap.user_name,
+            iap.status,
+            iap.position,
+            iap.phone,
+            iap.qq,
+            iap.email,
+            iap.site,
+            iap.persons,
+            iap.is_compliance,
+            iap.pre_year_value,
+            iap.start_date,
+            iap.end_date,
+            iap.apply_area,
+            iap.profile,
+            iap.scope,
+            iap.advantage,
+            iap.reason,
+            iap.memo,
+            iap.create_user_id,
+            iap.create_by,
+            iap.create_time,
+            iap.update_by,
+            iap.update_time,
+            iap.version,
+            iap.delete_flag,
+            iap.tenant_id,
+            iap.park_id,
+            iap.remark
+        FROM
+            dpo_apply_park iap
+    </sql>
+
+    <select id="selectApplyParkByUSerId" parameterType="Long" resultMap="ApplyParkResult">
+        <include refid="selectApplyParkVo"/>
+        WHERE iap.create_user_id = #{createUserId}
+    </select>
+
+
+    <select id="selectList" resultMap="ApplyParkResult">
+        <include refid="selectApplyParkVoList"></include>
+        ${ew.customSqlSegment}
+    </select>
+
+
+    <select id="selectById" parameterType="Long" resultMap="ApplyParkResult">
+        <include refid="selectApplyParkVo"/>
+        WHERE iap.id = #{id}
+    </select>
+
+
+</mapper>

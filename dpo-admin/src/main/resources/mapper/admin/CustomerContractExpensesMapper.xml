@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.CustomerContractExpensesMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.CustomerContractExpenses" id="CustomerContractExpensesResult">
+        <result property="id"    column="id"    />
+        <result property="billId"    column="bill_id"    />
+        <result property="expenseName"    column="expense_name"    />
+        <result property="amount"    column="amount"    />
+        <result property="expenseType"    column="expense_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkId"    column="park_id"    />
+    </resultMap>
+
+    <sql id="selectCustomerContractExpensesVo">
+        SELECT id, bill_id, expense_name, amount, expense_type, remark, create_by, create_time, update_by, update_time, version, delete_flag, tenant_id, park_id FROM dpo_customer_contract_expenses
+    </sql>
+
+    <select id="selectCustomerContractExpensesList" parameterType="CustomerContractExpenses" resultMap="CustomerContractExpensesResult">
+        <include refid="selectCustomerContractExpensesVo"/>
+        <where>
+            <if test="expenseName != null  and expenseName != ''"> AND expense_name LIKE CONCAT('%', #{expenseName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectCustomerContractExpensesById" parameterType="Long" resultMap="CustomerContractExpensesResult">
+        <include refid="selectCustomerContractExpensesVo"/>
+        WHERE id = #{id}
+    </select>
+
+    <delete id="deleteByBillId">
+        DELETE FROM `dpo_customer_contract_expenses` WHERE  `bill_id`=#{billid}
+    </delete>
+</mapper>

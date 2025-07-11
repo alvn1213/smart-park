@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.ServiceOrderMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.ServiceOrder" id="ServiceOrderResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="mobile" column="mobile"/>
+        <result property="memberId" column="member_id"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="serviceId" column="service_id"/>
+        <result property="remark" column="remark"/>
+        <result property="remarkList" column="remark_list"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+        <association property="serviceManage" javaType="cn.dtransfer.admin.domain.ServiceManage"
+                     resultMap="ServiceManageResult"/>
+        <association property="serviceSupplier" javaType="cn.dtransfer.admin.domain.ServiceSupplier"
+                     resultMap="ServiceSupplierResult"/>
+    </resultMap>
+
+    <resultMap type="cn.dtransfer.admin.domain.ServiceManage" id="ServiceManageResult">
+        <result property="id" column="service_id"/>
+        <result property="serviceName" column="service_name"/>
+        <result property="serviceDesc" column="service_desc"/>
+        <result property="price" column="price"/>
+        <result property="priceUnit" column="price_unit"/>
+    </resultMap>
+
+    <resultMap type="cn.dtransfer.admin.domain.ServiceSupplier" id="ServiceSupplierResult">
+        <result property="id" column="supplier_id"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="supplierImg" column="supplier_img"/>
+        <result property="supplierAddress" column="supplier_address"/>
+    </resultMap>
+
+    <sql id="selectServiceOrderVo">
+        SELECT iso.id,
+               iso.name,
+               iso.mobile,
+               iso.member_id,
+               iso.supplier_id,
+               iso.service_id,
+               iso.remark,
+               iso.remark_list,
+               iso.tenant_id,
+               iso.create_by,
+               iso.create_time,
+               iso.update_by,
+               iso.park_id,
+               iso.update_time,
+               ism.`service_name`,
+               ism.`service_desc`,
+               u.`username`,
+               iss.`supplier_name`,
+               iss.`supplier_img`
+        FROM dpo_service_order iso
+                 LEFT JOIN sys_user u ON iso.`member_id` = u.`id`
+                 LEFT JOIN dpo_service_supplier iss ON iso.`supplier_id` = iss.`id`
+                 LEFT JOIN dpo_service_manage ism ON iso.`service_id` = ism.`id`
+    </sql>
+
+    <select id="selectServiceOrderList" parameterType="cn.dtransfer.admin.domain.ServiceOrder"
+            resultMap="ServiceOrderResult">
+        <include refid="selectServiceOrderVo"/>
+        <where>
+            <if test="name != null  and name != ''">AND iso.name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="memberId != null">AND iso.member_id = #{memberId}</if>
+            <if test="supplierName != null and supplierName != ''">AND iss.supplier_name LIKE CONCAT('%',
+                #{supplierName}, '%')
+            </if>
+            <if test="serviceName != null and serviceName != ''">AND ism.service_name LIKE CONCAT('%', #{serviceName},
+                '%')
+            </if>
+            AND iso.delete_flag = 0
+        </where>
+    </select>
+
+    <select id="selectServiceOrderById" parameterType="Long" resultMap="ServiceOrderResult">
+        <include refid="selectServiceOrderVo"/>
+        where iso.id = #{id}
+    </select>
+
+
+    <select id="selectMyServiceOrderAppList" parameterType="cn.dtransfer.admin.domain.ServiceOrder"
+            resultMap="ServiceOrderResult">
+        <include refid="selectServiceOrderVo"/>
+        <where>
+            <if test="name != null  and name != ''">AND iso.name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="memberId != null">AND iso.member_id = #{memberId}</if>
+            <if test="supplierName != null and supplierName != ''">AND iss.supplier_name LIKE CONCAT('%',
+                #{supplierName},
+                '%')
+            </if>
+            <if test="serviceName != null and serviceName != ''">AND ism.service_name LIKE CONCAT('%', #{serviceName},
+                '%')
+            </if>
+            AND iso.delete_flag = 0
+        </where>
+    </select>
+
+</mapper>

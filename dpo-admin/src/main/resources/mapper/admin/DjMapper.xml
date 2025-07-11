@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dtransfer.admin.mapper.DjMapper">
+
+    <resultMap type="cn.dtransfer.admin.domain.Dj" id="DjResult">
+        <id property="id" column="id"/>
+        <result property="djName" column="dj_name"/>
+        <result property="content" column="content"/>
+        <result property="isMarketable" column="is_marketable"/>
+        <result property="marketableTime" column="marketable_time"/>
+        <result property="version" column="version"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="parkId" column="park_id"/>
+    </resultMap>
+
+    <sql id="selectDjVo">
+        SELECT id,
+               dj_name,
+               content,
+               is_marketable,
+               marketable_time,
+               version,
+               delete_flag,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               tenant_id,
+               park_id
+        FROM dpo_dj
+    </sql>
+
+</mapper>
