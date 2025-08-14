@@ -127,6 +127,9 @@
         <td><img src="images/web-decoration.png"/></td>
         <td><img src="images/web-order.png"/></td>
     </tr>
+	    <tr>
+        <td><img src="images/租控图.png"/></td>
+    </tr>
 </table>
 
 
@@ -144,6 +147,9 @@
 <img src="images/w4.png" width="200" height="433"  alt="活动"/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <img src="images/w5.jpg" width="200" height="433"  alt="我的"/>
+<img src="images/w6.jpg" width="200" height="433"  alt="会议室预定"/>
+<img src="images/w7.jpg" width="200" height="433"  alt="巡检任务"/>
+
 </div>
 
 
